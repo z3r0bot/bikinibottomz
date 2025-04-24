@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import client from '../../lib/shopify';
+import type { Product as ShopifyProduct } from 'shopify-buy';
 
 interface Product {
   id: string;
@@ -28,8 +29,26 @@ export default function ProductsPage() {
   useEffect(() => {
     async function fetchProducts() {
       try {
-        const products = await client.product.fetchAll();
-        setProducts(products);
+        const shopifyProducts = await client.product.fetchAll();
+        // Transform Shopify products to match our Product interface
+        const transformedProducts = shopifyProducts.map((product: ShopifyProduct) => ({
+          id: product.id,
+          title: product.title,
+          description: product.description,
+          images: {
+            edges: product.images.map(image => ({
+              node: {
+                url: image.src
+              }
+            }))
+          },
+          priceRange: {
+            minVariantPrice: {
+              amount: product.variants[0].price.amount.toString()
+            }
+          }
+        }));
+        setProducts(transformedProducts);
       } catch (error) {
         console.error('Error fetching products:', error);
       } finally {
