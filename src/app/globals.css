@@ -1,0 +1,44 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  * {
+    @apply cursor-none;
+  }
+
+  body {
+    @apply antialiased;
+  }
+}
+
+@layer components {
+  .btn {
+    @apply px-6 py-2 rounded-full transition-all duration-300;
+  }
+
+  .btn-primary {
+    @apply bg-accent-light dark:bg-accent-dark text-white hover:opacity-90;
+  }
+
+  .btn-secondary {
+    @apply bg-secondary-light dark:bg-secondary-dark text-text-light dark:text-text-dark hover:opacity-90;
+  }
+}
+
+/* Custom cursor styles */
+.cursor-custom-light,
+.cursor-custom-dark {
+  @apply mix-blend-difference;
+}
+
+/* Smooth theme transition */
+:root {
+  --transition-duration: 0.3s;
+}
+
+* {
+  transition: background-color var(--transition-duration) ease-in-out,
+              color var(--transition-duration) ease-in-out,
+              border-color var(--transition-duration) ease-in-out;
+} 
