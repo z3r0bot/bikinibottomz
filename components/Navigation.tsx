@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { useState } from 'react';
 import { ShoppingBagIcon, Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline';
+import Cart from '@/components/Cart';
 
 const Navigation = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -10,13 +11,13 @@ const Navigation = () => {
 
   const navLinks = [
     { href: '/', label: 'Home' },
-    { href: '/products', label: 'Shop' },
-    { href: '/categories', label: 'Categories' },
+    { href: '/products', label: 'Products' },
+    { href: '/collections', label: 'Collections' },
     { href: '/about', label: 'About' },
   ];
 
   return (
-    <nav className="bg-white shadow-md">
+    <nav className="bg-white shadow-md sticky top-0 z-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between h-16">
           <div className="flex items-center">
@@ -36,26 +37,21 @@ const Navigation = () => {
                 {link.label}
               </Link>
             ))}
-            <button className="relative p-2 text-gray-600 hover:text-blue-600">
-              <ShoppingBagIcon className="h-6 w-6" />
-              {cartCount > 0 && (
-                <span className="absolute top-0 right-0 -mt-1 -mr-1 bg-blue-600 text-white rounded-full h-5 w-5 flex items-center justify-center text-xs">
-                  {cartCount}
-                </span>
-              )}
-            </button>
+            <Cart />
           </div>
 
           {/* Mobile menu button */}
-          <div className="sm:hidden flex items-center">
+          <div className="flex items-center sm:hidden">
+            <Cart />
             <button
               onClick={() => setIsMenuOpen(!isMenuOpen)}
-              className="text-gray-600 hover:text-blue-600 p-2"
+              className="inline-flex items-center justify-center p-2 rounded-md text-gray-600 hover:text-blue-600 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-blue-500"
             >
+              <span className="sr-only">Open main menu</span>
               {isMenuOpen ? (
-                <XMarkIcon className="h-6 w-6" />
+                <XMarkIcon className="block h-6 w-6" aria-hidden="true" />
               ) : (
-                <Bars3Icon className="h-6 w-6" />
+                <Bars3Icon className="block h-6 w-6" aria-hidden="true" />
               )}
             </button>
           </div>
