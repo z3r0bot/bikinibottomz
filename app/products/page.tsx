@@ -17,7 +17,11 @@ export default function ProductsPage() {
       try {
         setLoading(true);
         setError(null);
-        const fetchedProducts = await fetchAllProducts();
+        const response = await fetch('/api/products');
+        if (!response.ok) {
+          throw new Error('Failed to fetch products');
+        }
+        const fetchedProducts = await response.json();
         setProducts(fetchedProducts);
       } catch (err) {
         console.error('Error fetching products:', err);
