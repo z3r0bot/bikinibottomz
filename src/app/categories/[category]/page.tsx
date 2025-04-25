@@ -3,6 +3,16 @@
 import { useParams } from 'next/navigation';
 import Link from 'next/link';
 
+// This is used by Next.js to generate static paths at build time
+export async function generateStaticParams() {
+  return [
+    { category: 'fashion' },
+    { category: 'beauty' },
+    { category: 'summer' },
+    { category: 'crystals' }
+  ];
+}
+
 export default function CategoryPage() {
   const params = useParams();
   const category = params.category as string;
