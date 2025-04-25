@@ -55,15 +55,8 @@ export default function Navbar() {
             >
               <Menu className="h-6 w-6" />
             </button>
-            <Link href="/" className="ml-4 flex items-center gap-3">
-              <Image
-                src="/images/shell-logo.png"
-                alt="Shell Logo"
-                width={40}
-                height={40}
-                className="w-10 h-10"
-              />
-              <span className="font-pacifico text-2xl text-white group-hover:text-[#ff7400] transition-colors duration-200">
+            <Link href="/" className="ml-4">
+              <span className="font-dancing text-2xl text-white group-hover:text-[#ff7400] transition-colors duration-200">
                 Bikini Bottoms
               </span>
             </Link>

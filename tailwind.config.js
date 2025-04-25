@@ -1,9 +1,9 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
   content: [
-    './app/**/*.{js,ts,jsx,tsx,mdx}',
+    './pages/**/*.{js,ts,jsx,tsx,mdx}',
     './components/**/*.{js,ts,jsx,tsx,mdx}',
-    './lib/**/*.{js,ts,jsx,tsx,mdx}',
+    './app/**/*.{js,ts,jsx,tsx,mdx}',
   ],
   darkMode: 'class',
   theme: {
@@ -28,10 +28,17 @@ module.exports = {
       },
       fontFamily: {
         sans: ['Montserrat', 'sans-serif'],
+        dancing: ['var(--font-dancing)'],
+        raleway: ['var(--font-raleway)'],
       },
       cursor: {
         'custom-light': 'url("/cursors/cursor-light.png"), auto',
         'custom-dark': 'url("/cursors/cursor-dark.png"), auto',
+      },
+      backgroundImage: {
+        'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
+        'gradient-conic':
+          'conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))',
       },
     },
   },
