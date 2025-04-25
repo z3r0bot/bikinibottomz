@@ -1,11 +1,13 @@
 import './globals.css'
-import type { Metadata } from 'next'
-import Navigation from '@/components/Navigation'
+import { Inter } from 'next/font/google'
+import Navbar from '@/components/Navbar'
 import Footer from '@/components/Footer'
 
-export const metadata: Metadata = {
-  title: 'Bikini Bottomz - Underwater Fashion Store',
-  description: 'Your premier destination for underwater fashion and accessories from Bikini Bottom',
+const inter = Inter({ subsets: ['latin'] })
+
+export const metadata = {
+  title: 'Bikini Bottomz',
+  description: 'Your premier destination for underwater fashion and accessories',
 }
 
 export default function RootLayout({
@@ -15,11 +17,9 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className="flex flex-col min-h-screen bg-gray-50">
-        <Navigation />
-        <main className="flex-grow">
-          {children}
-        </main>
+      <body className={`${inter.className} bg-white`}>
+        <Navbar />
+        <main className="min-h-screen">{children}</main>
         <Footer />
       </body>
     </html>
