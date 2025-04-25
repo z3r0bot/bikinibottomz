@@ -3,7 +3,8 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { useCartStore } from '@/store/cartStore';
-import { Menu, X, ShoppingBag, Search } from 'lucide-react';
+import { Menu, X, ShoppingBag } from 'lucide-react';
+import SearchBar from './SearchBar';
 
 export default function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -58,9 +59,7 @@ export default function Navbar() {
 
           {/* Right section - Search, Currency, Cart */}
           <div className="flex items-center space-x-4">
-            <button className="text-gray-600 hover:text-purple-600">
-              <Search className="h-5 w-5" />
-            </button>
+            <SearchBar />
             <div className="relative">
               <button
                 onClick={() => setIsCurrencyOpen(!isCurrencyOpen)}
@@ -101,12 +100,17 @@ export default function Navbar() {
       {isMenuOpen && (
         <div className="fixed inset-0 z-50 bg-white">
           <div className="p-4">
-            <button
-              onClick={() => setIsMenuOpen(false)}
-              className="text-gray-600 hover:text-purple-600 focus:outline-none"
-            >
-              <X className="h-6 w-6" />
-            </button>
+            <div className="flex justify-between items-center">
+              <Link href="/" className="font-bold text-xl text-purple-600" onClick={() => setIsMenuOpen(false)}>
+                Bikini Bottomz
+              </Link>
+              <button
+                onClick={() => setIsMenuOpen(false)}
+                className="text-gray-600 hover:text-purple-600 focus:outline-none"
+              >
+                <X className="h-6 w-6" />
+              </button>
+            </div>
             <div className="mt-8 space-y-6">
               {categories.map((category) => (
                 <Link
