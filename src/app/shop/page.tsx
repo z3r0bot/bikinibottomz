@@ -1,41 +1,122 @@
 'use client';
 
 import { useCartStore } from '@/store/cartStore';
+import { Product } from '@/lib/shopify';
 import Image from 'next/image';
 
-const products = [
+const products: Product[] = [
   {
     id: '1',
-    name: 'Summer Bikini Set',
-    price: 49.99,
-    image: '/images/bikini-1.jpg',
+    title: 'Summer Bikini Set',
+    handle: 'summer-bikini-set',
     description: 'Beautiful summer bikini set with tropical print',
-    quantity: 1,
+    images: {
+      edges: [
+        {
+          node: {
+            url: '/images/bikini-1.jpg',
+            altText: 'Summer Bikini Set'
+          }
+        }
+      ]
+    },
+    variants: {
+      edges: [
+        {
+          node: {
+            id: '1',
+            price: '49.99',
+            title: 'Default',
+            availableForSale: true
+          }
+        }
+      ]
+    }
   },
   {
     id: '2',
-    name: 'Crystal Necklace',
-    price: 29.99,
-    image: '/images/crystal-1.jpg',
+    title: 'Crystal Necklace',
+    handle: 'crystal-necklace',
     description: 'Handmade crystal necklace with healing properties',
-    quantity: 1,
+    images: {
+      edges: [
+        {
+          node: {
+            url: '/images/crystal-1.jpg',
+            altText: 'Crystal Necklace'
+          }
+        }
+      ]
+    },
+    variants: {
+      edges: [
+        {
+          node: {
+            id: '2',
+            price: '29.99',
+            title: 'Default',
+            availableForSale: true
+          }
+        }
+      ]
+    }
   },
   {
     id: '3',
-    name: 'Beach Cover-up',
-    price: 39.99,
-    image: '/images/coverup-1.jpg',
+    title: 'Beach Cover-up',
+    handle: 'beach-cover-up',
     description: 'Light and airy beach cover-up',
-    quantity: 1,
+    images: {
+      edges: [
+        {
+          node: {
+            url: '/images/coverup-1.jpg',
+            altText: 'Beach Cover-up'
+          }
+        }
+      ]
+    },
+    variants: {
+      edges: [
+        {
+          node: {
+            id: '3',
+            price: '39.99',
+            title: 'Default',
+            availableForSale: true
+          }
+        }
+      ]
+    }
   },
   {
     id: '4',
-    name: 'Summer Dress',
-    price: 59.99,
-    image: '/images/dress-1.jpg',
+    title: 'Summer Dress',
+    handle: 'summer-dress',
     description: 'Elegant summer dress perfect for any occasion',
-    quantity: 1,
-  },
+    images: {
+      edges: [
+        {
+          node: {
+            url: '/images/dress-1.jpg',
+            altText: 'Summer Dress'
+          }
+        }
+      ]
+    },
+    variants: {
+      edges: [
+        {
+          node: {
+            id: '4',
+            price: '59.99',
+            title: 'Default',
+            availableForSale: true
+          }
+        }
+      ]
+    }
+  }
 ];
 
 export default function ShopPage() {
@@ -48,23 +129,25 @@ export default function ShopPage() {
         {products.map((product) => (
           <div
             key={product.id}
-            className="bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden"
+            className="bg-white rounded-lg shadow-md overflow-hidden"
           >
             <div className="relative h-64">
               <Image
-                src={product.image}
-                alt={product.name}
+                src={product.images.edges[0]?.node.url || ''}
+                alt={product.images.edges[0]?.node.altText || product.title}
                 fill
                 className="object-cover"
               />
             </div>
             <div className="p-4">
-              <h2 className="text-xl font-semibold mb-2">{product.name}</h2>
-              <p className="text-gray-600 dark:text-gray-300 mb-2">
+              <h2 className="text-xl font-semibold mb-2">{product.title}</h2>
+              <p className="text-gray-600 mb-2">
                 {product.description}
               </p>
               <div className="flex items-center justify-between">
-                <span className="text-lg font-bold">${product.price}</span>
+                <span className="text-lg font-bold">
+                  ${parseFloat(product.variants.edges[0].node.price).toFixed(2)}
+                </span>
                 <button
                   onClick={() => addItem(product)}
                   className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition-colors"
