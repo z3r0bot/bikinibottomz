@@ -62,7 +62,7 @@ export default function Navbar() {
                 className="w-8 h-8"
               />
               <span className="font-pacifico text-xl text-[#ff7400] hover:text-[#fd8b17] transition-colors duration-200">
-                Bikini Bottom
+                Bikini Bottoms
               </span>
             </Link>
 

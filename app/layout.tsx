@@ -16,7 +16,7 @@ const poppins = Poppins({
 })
 
 export const metadata = {
-  title: 'Bikini Bottom',
+  title: 'Bikini Bottoms',
   description: 'Your premier destination for beachwear and accessories',
 }
 
