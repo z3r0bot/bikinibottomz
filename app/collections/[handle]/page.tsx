@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { useParams } from 'next/navigation';
-import { Collection, Product, fetchCollectionByHandle } from '../../../lib/shopify';
+import { Collection, Product } from '@/lib/shopify';
 import { useCartStore } from '@/store/cartStore';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -22,7 +22,11 @@ export default function CollectionDetailPage() {
       try {
         setLoading(true);
         setError(null);
-        const fetchedCollection = await fetchCollectionByHandle(handle);
+        const response = await fetch(`/api/collections/${handle}`);
+        if (!response.ok) {
+          throw new Error('Failed to fetch collection');
+        }
+        const fetchedCollection = await response.json();
         setCollection(fetchedCollection);
       } catch (err) {
         console.error(`Error fetching collection with handle ${handle}:`, err);
@@ -38,16 +42,7 @@ export default function CollectionDetailPage() {
   }, [handle]);
 
   const handleAddToCart = (product: Product) => {
-    // Get the first variant or default to the first one
-    const variant = product.variants[0];
-    
-    addItem({
-      id: variant.id,
-      name: product.title,
-      price: parseFloat(variant.price),
-      image: product.images.edges[0]?.node.url || '',
-      quantity: 1
-    });
+    addItem(product);
   };
 
   if (loading) {
@@ -111,7 +106,7 @@ export default function CollectionDetailPage() {
       )}
 
       {/* Products Grid */}
-      {collection.products.length === 0 ? (
+      {collection.products.edges.length === 0 ? (
         <div className="text-center py-12">
           <p className="text-gray-600 text-lg mb-4">No products found in this collection.</p>
           <Link href="/products" className="text-blue-600 hover:text-blue-800">
@@ -120,11 +115,11 @@ export default function CollectionDetailPage() {
         </div>
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-          {collection.products.map((product) => (
+          {collection.products.edges.map(({ node: product }) => (
             <div key={product.id} className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300">
               <Link href={`/products/${product.handle}`}>
                 <div className="aspect-w-1 aspect-h-1 relative">
-                  {product.images.edges[0] ? (
+                  {product.images.edges[0]?.node.url ? (
                     <Image
                       src={product.images.edges[0].node.url}
                       alt={product.images.edges[0].node.altText || product.title}
@@ -148,7 +143,7 @@ export default function CollectionDetailPage() {
                 <p className="text-gray-600 mb-4 line-clamp-2">{product.description}</p>
                 <div className="flex justify-between items-center">
                   <span className="text-lg font-bold text-blue-600">
-                    ${parseFloat(product.priceRange.minVariantPrice.amount).toFixed(2)}
+                    ${parseFloat(product.variants.edges[0].node.price).toFixed(2)}
                   </span>
                   <button 
                     onClick={() => handleAddToCart(product)}
