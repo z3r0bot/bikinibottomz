@@ -1,120 +1,93 @@
-import Image from 'next/image';
+'use client';
+
+import { motion } from 'framer-motion';
 import Link from 'next/link';
+import Image from 'next/image';
 
 export default function Home() {
-  const categories = [
-    {
-      name: 'Fashion',
-      description: 'Discover our newest arrivals in underwater fashion',
-      image: 'https://placehold.co/600x400/purple/white?text=Fashion',
-      href: '/categories/fashion',
-    },
-    {
-      name: 'Beauty',
-      description: 'Special offers on selected items',
-      image: 'https://placehold.co/600x400/purple/white?text=Beauty',
-      href: '/categories/beauty',
-    },
-    {
-      name: 'Crystals',
-      description: 'Explore our crystal collection',
-      image: 'https://placehold.co/600x400/purple/white?text=Crystals',
-      href: '/categories/crystals',
-    },
-    {
-      name: 'Summer',
-      description: 'Get ready for summer',
-      image: 'https://placehold.co/600x400/purple/white?text=Summer',
-      href: '/categories/summer',
-    },
-  ];
-
   return (
-    <div className="bg-white">
+    <main>
       {/* Hero Section */}
-      <div className="relative h-[70vh] bg-purple-100">
-        <div className="absolute inset-0 bg-gradient-to-r from-purple-600/30 to-transparent" />
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-full flex items-center">
-          <div className="max-w-xl">
-            <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
-              Welcome to Bikini Bottomz
-            </h1>
-            <p className="text-lg text-gray-800 mb-8">
-              Your premier destination for underwater fashion and accessories
-            </p>
+      <div className="relative h-[80vh] flex items-center justify-center overflow-hidden">
+        {/* Background Image */}
+        <Image
+          src="/images/hero-bg.jpg"
+          alt="Beach background"
+          fill
+          className="object-cover"
+          priority
+        />
+        {/* Overlay */}
+        <div className="absolute inset-0 bg-gradient-to-r from-[#ff7400]/80 to-[#ffc367]/80" />
+        
+        {/* Content */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8 }}
+          className="relative text-center text-white z-10 px-4"
+        >
+          <h1 className="text-5xl md:text-7xl font-bold mb-8">Welcome to Bikini Bottomz</h1>
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.3, duration: 0.8 }}
+          >
             <Link
-              href="/products"
-              className="inline-block bg-purple-600 text-white px-8 py-3 rounded-md hover:bg-purple-700 transition-colors"
+              href="/collections"
+              className="inline-block bg-white text-[#ff7400] px-8 py-4 rounded-full text-lg font-semibold hover:bg-[#ff7400] hover:text-white transition-all duration-300 transform hover:scale-105"
             >
               Shop Now
             </Link>
-          </div>
-        </div>
+          </motion.div>
+        </motion.div>
       </div>
 
       {/* Featured Categories */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-        <h2 className="text-3xl font-bold text-center text-gray-900 mb-12">
-          Featured Categories
-        </h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-          {categories.map((category) => (
-            <Link
-              key={category.name}
-              href={category.href}
-              className="group relative h-64 overflow-hidden rounded-lg"
-            >
-              <div className="absolute inset-0 bg-gray-900/30 group-hover:bg-gray-900/40 transition-colors z-10" />
-              <Image
-                src={category.image}
-                alt={category.name}
-                fill
-                className="object-cover group-hover:scale-105 transition-transform duration-300"
-              />
-              <div className="absolute inset-0 flex flex-col justify-end p-6 z-20">
-                <h3 className="text-xl font-semibold text-white mb-2">
-                  {category.name}
-                </h3>
-                <p className="text-white/90">
-                  {category.description}
-                </p>
-              </div>
-            </Link>
-          ))}
-        </div>
-      </div>
-
-      {/* Features Section */}
-      <div className="bg-gray-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <div className="text-center">
-              <h3 className="text-lg font-semibold text-gray-900 mb-2">
-                Latest Collections
-              </h3>
-              <p className="text-gray-600">
-                Discover our newest arrivals in underwater fashion
-              </p>
-            </div>
-            <div className="text-center">
-              <h3 className="text-lg font-semibold text-gray-900 mb-2">
-                Exclusive Deals
-              </h3>
-              <p className="text-gray-600">
-                Special offers on selected items
-              </p>
-            </div>
-            <div className="text-center">
-              <h3 className="text-lg font-semibold text-gray-900 mb-2">
-                Free Shipping
-              </h3>
-              <p className="text-gray-600">
-                On orders over $50
-              </p>
-            </div>
+      <section className="py-16 bg-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <motion.h2
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+            className="text-3xl font-bold text-center mb-12 text-[#ff7400]"
+          >
+            Featured Categories
+          </motion.h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+            {[
+              { name: 'Fashion', image: '/images/categories/fashion.jpg', href: '/categories/fashion' },
+              { name: 'Beauty', image: '/images/categories/beauty.jpg', href: '/categories/beauty' },
+              { name: 'Crystals', image: '/images/categories/crystals.jpg', href: '/categories/crystals' },
+              { name: 'Summer', image: '/images/categories/summer.jpg', href: '/categories/summer' },
+            ].map((category, index) => (
+              <motion.div
+                key={category.name}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: index * 0.2, duration: 0.6 }}
+              >
+                <Link href={category.href} className="group block relative overflow-hidden rounded-lg">
+                  <div className="aspect-w-1 aspect-h-1 w-full">
+                    <Image
+                      src={category.image}
+                      alt={category.name}
+                      fill
+                      className="object-cover transform group-hover:scale-110 transition-transform duration-500"
+                    />
+                  </div>
+                  <div className="absolute inset-0 bg-gradient-to-t from-[#ff7400]/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                  <h3 className="absolute bottom-4 left-4 text-white text-xl font-semibold transform translate-y-4 group-hover:translate-y-0 opacity-0 group-hover:opacity-100 transition-all duration-300">
+                    {category.name}
+                  </h3>
+                </Link>
+              </motion.div>
+            ))}
           </div>
         </div>
-      </div>
-    </div>
+      </section>
+    </main>
   );
 } 
