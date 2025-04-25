@@ -29,7 +29,7 @@ export default function Home() {
   ];
 
   return (
-    <main className="pt-16"> {/* Added padding-top to account for fixed navbar */}
+    <main>
       {/* Hero Section with Three Images */}
       <div className="relative h-screen w-full flex">
         {/* First Hero Image */}
@@ -40,12 +40,12 @@ export default function Home() {
             fill
             className="object-cover"
             priority
+            sizes="33vw"
           />
-          <div className="absolute inset-0 bg-black bg-opacity-30" />
         </div>
 
         {/* Orange Divider */}
-        <div className="w-[3px] bg-gradient-to-b from-[#ff7400] via-[#ffa242] to-[#ff7400]" />
+        <div className="w-[3px] bg-gradient-to-b from-[#ff7400] via-[#ffa242] to-[#ff7400] z-10" />
 
         {/* Second Hero Image */}
         <div className="flex-1 relative">
@@ -55,12 +55,12 @@ export default function Home() {
             fill
             className="object-cover"
             priority
+            sizes="33vw"
           />
-          <div className="absolute inset-0 bg-black bg-opacity-30" />
         </div>
 
         {/* Orange Divider */}
-        <div className="w-[3px] bg-gradient-to-b from-[#ff7400] via-[#ffa242] to-[#ff7400]" />
+        <div className="w-[3px] bg-gradient-to-b from-[#ff7400] via-[#ffa242] to-[#ff7400] z-10" />
 
         {/* Third Hero Image */}
         <div className="flex-1 relative">
@@ -70,12 +70,12 @@ export default function Home() {
             fill
             className="object-cover"
             priority
+            sizes="33vw"
           />
-          <div className="absolute inset-0 bg-black bg-opacity-30" />
         </div>
 
         {/* Centered Text Overlay */}
-        <div className="absolute inset-0 flex items-center justify-center text-center z-10">
+        <div className="absolute inset-0 flex items-center justify-center text-center z-20">
           <div className="px-4">
             <motion.div
               initial={{ opacity: 0, y: 20 }}
@@ -88,11 +88,12 @@ export default function Home() {
                 width={120}
                 height={120}
                 className="mx-auto mb-8"
+                priority
               />
-              <h1 className="text-5xl md:text-7xl font-bold text-white mb-6 font-pacifico">
+              <h1 className="text-5xl md:text-7xl font-bold text-white mb-6 font-pacifico drop-shadow-lg">
                 Bikini Bottoms
               </h1>
-              <p className="text-xl md:text-2xl text-white mb-8 max-w-2xl mx-auto">
+              <p className="text-xl md:text-2xl text-white mb-8 max-w-2xl mx-auto drop-shadow">
                 Your premier destination for beachwear and accessories
               </p>
               <Link
@@ -108,7 +109,9 @@ export default function Home() {
 
       {/* Categories Grid - Full Width */}
       <div className="px-4 py-16 bg-gradient-to-b from-white to-gray-50">
-        <h2 className="text-4xl font-bold text-center mb-12 font-pacifico text-[#ff7400]">Shop by Category</h2>
+        <h2 className="text-4xl font-bold text-center mb-12 font-pacifico text-[#ff7400]">
+          Shop by Category
+        </h2>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 max-w-[2000px] mx-auto">
           {categories.map((category) => (
             <Link
@@ -133,7 +136,7 @@ export default function Home() {
               
               {/* Category Name */}
               <div className="absolute inset-0 flex items-center justify-center">
-                <h3 className="text-3xl font-bold text-white">{category.name}</h3>
+                <h3 className="text-3xl font-bold text-white drop-shadow-lg">{category.name}</h3>
               </div>
             </Link>
           ))}

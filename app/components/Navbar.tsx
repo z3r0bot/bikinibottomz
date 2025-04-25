@@ -4,8 +4,7 @@ import { useState, useRef, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { useCartStore } from '@/store/cartStore';
-import { Menu, X, ShoppingBag } from 'lucide-react';
-import SearchBar from './SearchBar';
+import { Menu, X, ShoppingBag, Search } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 export default function Navbar() {
@@ -42,9 +41,12 @@ export default function Navbar() {
   }, []);
 
   return (
-    <nav className="fixed top-0 left-0 right-0 z-50 transition-all duration-300 bg-transparent hover:bg-white group">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between h-16">
+    <nav className="fixed top-0 left-0 right-0 z-50 group">
+      {/* Background that only appears on hover */}
+      <div className="absolute inset-0 bg-white opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+      
+      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex justify-between h-16 items-center">
           {/* Left section - Menu button and Logo */}
           <div className="flex items-center relative" ref={menuRef}>
             <button
@@ -59,7 +61,7 @@ export default function Navbar() {
                 alt="Shell Logo"
                 width={40}
                 height={40}
-                className="w-10 h-10 transition-transform duration-300 group-hover:scale-110"
+                className="w-10 h-10"
               />
               <span className="font-pacifico text-2xl text-white group-hover:text-[#ff7400] transition-colors duration-200">
                 Bikini Bottoms
@@ -97,13 +99,13 @@ export default function Navbar() {
             </AnimatePresence>
           </div>
 
-          {/* Center section - Desktop category links */}
-          <div className="hidden md:flex items-center space-x-8">
+          {/* Center section - Desktop category links - Only visible on hover */}
+          <div className="hidden md:flex items-center space-x-8 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
             {categories.map((category) => (
               <Link
                 key={category.name}
                 href={category.href}
-                className="text-white group-hover:text-gray-800 hover:!text-[#ff7400] transition-colors duration-200 font-poppins"
+                className="text-gray-800 hover:text-[#ff7400] transition-colors duration-200 font-poppins"
               >
                 {category.name}
               </Link>
@@ -112,11 +114,13 @@ export default function Navbar() {
 
           {/* Right section - Search, Currency, Cart */}
           <div className="flex items-center space-x-4">
-            <SearchBar />
+            <button className="text-white group-hover:text-gray-800 hover:text-[#ff7400] transition-colors duration-200">
+              <Search className="h-5 w-5" />
+            </button>
             <div className="relative">
               <button
                 onClick={() => setIsCurrencyOpen(!isCurrencyOpen)}
-                className="text-white group-hover:text-gray-800 hover:!text-[#ff7400] transition-colors duration-200 font-poppins"
+                className="text-white group-hover:text-gray-800 hover:text-[#ff7400] transition-colors duration-200 font-poppins"
               >
                 {currency}
               </button>
@@ -146,7 +150,7 @@ export default function Navbar() {
             </div>
             <Link 
               href="/cart" 
-              className="text-white group-hover:text-gray-800 hover:!text-[#ff7400] transition-colors duration-200 relative"
+              className="text-white group-hover:text-gray-800 hover:text-[#ff7400] transition-colors duration-200 relative"
             >
               <ShoppingBag className="h-5 w-5" />
               {items.length > 0 && (
