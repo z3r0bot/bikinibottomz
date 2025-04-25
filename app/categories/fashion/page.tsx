@@ -1,4 +1,4 @@
-import CategoryPage from '@/app/components/CategoryPage';
+import CategoryPage from '../../components/CategoryPage';
 
 // This would typically come from your CMS or API
 const fashionProducts = [

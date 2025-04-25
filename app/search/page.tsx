@@ -1,7 +1,8 @@
 'use client';
 
 import { useSearchParams } from 'next/navigation';
-import CategoryPage from '@/components/CategoryPage';
+import CategoryPage from '../components/CategoryPage';
+import { Suspense } from 'react';
 
 // This would typically come from your API based on the search query
 const searchProducts = (query: string) => {
@@ -36,7 +37,7 @@ const searchProducts = (query: string) => {
   );
 };
 
-export default function SearchPage() {
+function SearchResults() {
   const searchParams = useSearchParams();
   const query = searchParams.get('q') || '';
   const products = searchProducts(query);
@@ -47,5 +48,13 @@ export default function SearchPage() {
       description={`Found ${products.length} products matching your search.`}
       products={products}
     />
+  );
+}
+
+export default function SearchPage() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <SearchResults />
+    </Suspense>
   );
 } 
