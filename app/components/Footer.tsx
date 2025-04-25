@@ -24,22 +24,22 @@ export default function Footer() {
             </h3>
             <ul className="space-y-3">
               <li>
-                <Link href="/categories/fashion" className="text-gray-600 hover:text-purple-600">
+                <Link href="/categories/fashion" className="text-gray-600 hover:text-[#ff7400]">
                   Fashion
                 </Link>
               </li>
               <li>
-                <Link href="/categories/beauty" className="text-gray-600 hover:text-purple-600">
+                <Link href="/categories/beauty" className="text-gray-600 hover:text-[#ff7400]">
                   Beauty
                 </Link>
               </li>
               <li>
-                <Link href="/categories/summer" className="text-gray-600 hover:text-purple-600">
+                <Link href="/categories/summer" className="text-gray-600 hover:text-[#ff7400]">
                   Summer
                 </Link>
               </li>
               <li>
-                <Link href="/categories/crystals" className="text-gray-600 hover:text-purple-600">
+                <Link href="/categories/crystals" className="text-gray-600 hover:text-[#ff7400]">
                   Crystals
                 </Link>
               </li>
@@ -53,22 +53,22 @@ export default function Footer() {
             </h3>
             <ul className="space-y-3">
               <li>
-                <Link href="/about" className="text-gray-600 hover:text-purple-600">
+                <Link href="/about" className="text-gray-600 hover:text-[#ff7400]">
                   About Us
                 </Link>
               </li>
               <li>
-                <Link href="/contact" className="text-gray-600 hover:text-purple-600">
+                <Link href="/contact" className="text-gray-600 hover:text-[#ff7400]">
                   Contact
                 </Link>
               </li>
               <li>
-                <Link href="/faq" className="text-gray-600 hover:text-purple-600">
+                <Link href="/faq" className="text-gray-600 hover:text-[#ff7400]">
                   FAQ
                 </Link>
               </li>
               <li>
-                <Link href="/shipping" className="text-gray-600 hover:text-purple-600">
+                <Link href="/shipping" className="text-gray-600 hover:text-[#ff7400]">
                   Shipping & Returns
                 </Link>
               </li>
@@ -81,16 +81,16 @@ export default function Footer() {
               Follow Us
             </h3>
             <div className="flex space-x-4">
-              <a href="#" className="text-gray-600 hover:text-purple-600">
+              <a href="#" className="text-gray-600 hover:text-[#ff7400]">
                 <Instagram className="h-5 w-5" />
               </a>
-              <a href="#" className="text-gray-600 hover:text-purple-600">
+              <a href="#" className="text-gray-600 hover:text-[#ff7400]">
                 <Facebook className="h-5 w-5" />
               </a>
-              <a href="#" className="text-gray-600 hover:text-purple-600">
+              <a href="#" className="text-gray-600 hover:text-[#ff7400]">
                 <Twitter className="h-5 w-5" />
               </a>
-              <a href="#" className="text-gray-600 hover:text-purple-600">
+              <a href="#" className="text-gray-600 hover:text-[#ff7400]">
                 <Youtube className="h-5 w-5" />
               </a>
             </div>
@@ -110,12 +110,12 @@ export default function Footer() {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="Enter your email"
-                className="flex-1 px-4 py-2 border border-gray-300 rounded-l-md focus:outline-none focus:ring-2 focus:ring-purple-600 focus:border-transparent"
+                className="flex-1 px-4 py-2 border border-gray-300 rounded-l-md focus:outline-none focus:ring-2 focus:ring-[#ff7400] focus:border-transparent"
                 required
               />
               <button
                 type="submit"
-                className="px-4 py-2 bg-purple-600 text-white rounded-r-md hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-purple-600 focus:ring-offset-2"
+                className="px-4 py-2 bg-gradient-to-r from-[#ff7400] to-[#ffa242] text-white rounded-r-md hover:from-[#ff7400] hover:to-[#ff7400] focus:outline-none focus:ring-2 focus:ring-[#ff7400] focus:ring-offset-2"
               >
                 Subscribe
               </button>
@@ -125,7 +125,7 @@ export default function Footer() {
 
         <div className="mt-12 border-t border-gray-200 pt-8">
           <p className="text-center text-gray-500">
-            © {new Date().getFullYear()} Bikini Bottomz. All rights reserved.
+            © {new Date().getFullYear()} Bikini Bottom. All rights reserved.
           </p>
         </div>
       </div>

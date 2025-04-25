@@ -2,6 +2,7 @@
 
 import { useState, useRef, useEffect } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { useCartStore } from '@/store/cartStore';
 import { Menu, X, ShoppingBag } from 'lucide-react';
 import SearchBar from './SearchBar';
@@ -52,8 +53,17 @@ export default function Navbar() {
             >
               <Menu className="h-6 w-6" />
             </button>
-            <Link href="/" className="ml-4 font-bold text-xl text-[#ff7400] hover:text-[#fd8b17] transition-colors duration-200">
-              Bikini Bottomz
+            <Link href="/" className="ml-4 flex items-center gap-2">
+              <Image
+                src="/images/shell-logo.png"
+                alt="Shell Logo"
+                width={32}
+                height={32}
+                className="w-8 h-8"
+              />
+              <span className="font-pacifico text-xl text-[#ff7400] hover:text-[#fd8b17] transition-colors duration-200">
+                Bikini Bottom
+              </span>
             </Link>
 
             {/* Dropdown Menu */}
@@ -93,7 +103,7 @@ export default function Navbar() {
               <Link
                 key={category.name}
                 href={category.href}
-                className="text-gray-600 hover:text-[#ff7400] transition-colors duration-200"
+                className="text-gray-600 hover:text-[#ff7400] transition-colors duration-200 font-poppins"
               >
                 {category.name}
               </Link>
@@ -106,7 +116,7 @@ export default function Navbar() {
             <div className="relative">
               <button
                 onClick={() => setIsCurrencyOpen(!isCurrencyOpen)}
-                className="text-gray-600 hover:text-[#ff7400] transition-colors duration-200"
+                className="text-gray-600 hover:text-[#ff7400] transition-colors duration-200 font-poppins"
               >
                 {currency}
               </button>
@@ -125,7 +135,7 @@ export default function Navbar() {
                           setCurrency(curr);
                           setIsCurrencyOpen(false);
                         }}
-                        className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gradient-to-r hover:from-[#ff7400] hover:to-[#ffa242] hover:text-white transition-all duration-200"
+                        className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gradient-to-r hover:from-[#ff7400] hover:to-[#ffa242] hover:text-white transition-all duration-200 font-poppins"
                       >
                         {curr}
                       </button>
