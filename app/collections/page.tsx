@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { Collection, fetchAllCollections } from '../../lib/shopify';
+import { Collection } from '@/lib/shopify';
 import Image from 'next/image';
 import Link from 'next/link';
 
@@ -15,7 +15,11 @@ export default function CollectionsPage() {
       try {
         setLoading(true);
         setError(null);
-        const fetchedCollections = await fetchAllCollections();
+        const response = await fetch('/api/collections');
+        if (!response.ok) {
+          throw new Error('Failed to fetch collections');
+        }
+        const fetchedCollections = await response.json();
         setCollections(fetchedCollections);
       } catch (err) {
         console.error('Error fetching collections:', err);
@@ -97,7 +101,7 @@ export default function CollectionsPage() {
                   <p className="text-gray-600 mb-4 line-clamp-2">{collection.description}</p>
                   <div className="flex justify-between items-center">
                     <span className="text-sm text-gray-500">
-                      {collection.products.length} {collection.products.length === 1 ? 'product' : 'products'}
+                      {collection.products.edges.length} {collection.products.edges.length === 1 ? 'product' : 'products'}
                     </span>
                     <span className="text-blue-600 font-medium group-hover:underline">
                       View Collection

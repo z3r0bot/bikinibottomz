@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { useParams } from 'next/navigation';
-import { Product, fetchProductByHandle } from '../../../lib/shopify';
+import { Product } from '@/lib/shopify';
 import { useCartStore } from '@/store/cartStore';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -24,7 +24,11 @@ export default function ProductDetailPage() {
       try {
         setLoading(true);
         setError(null);
-        const fetchedProduct = await fetchProductByHandle(handle);
+        const response = await fetch(`/api/products/${handle}`);
+        if (!response.ok) {
+          throw new Error('Failed to fetch product');
+        }
+        const fetchedProduct = await response.json();
         setProduct(fetchedProduct);
       } catch (err) {
         console.error(`Error fetching product with handle ${handle}:`, err);
@@ -71,7 +75,7 @@ export default function ProductDetailPage() {
     );
   }
 
-  const selectedVariant = product.variants[selectedVariantIndex];
+  const selectedVariant = product.variants.edges[selectedVariantIndex].node;
   const mainImage = product.images.edges[0]?.node;
 
   return (
@@ -116,13 +120,13 @@ export default function ProductDetailPage() {
           </div>
           
           {/* Variant Selection */}
-          {product.variants.length > 1 && (
+          {product.variants.edges.length > 1 && (
             <div className="mb-6">
               <label className="block text-sm font-medium text-gray-700 mb-2">
                 Select Variant
               </label>
               <div className="grid grid-cols-2 gap-2">
-                {product.variants.map((variant, index) => (
+                {product.variants.edges.map(({ node: variant }, index) => (
                   <button
                     key={variant.id}
                     onClick={() => setSelectedVariantIndex(index)}
