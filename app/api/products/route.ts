@@ -1,5 +1,41 @@
 import { NextResponse } from 'next/server';
-import { shopifyClient, PRODUCTS_QUERY } from '@/lib/shopify';
+
+// GraphQL query
+const PRODUCTS_QUERY = `
+  query Products {
+    products(first: 10) {
+      edges {
+        node {
+          id
+          title
+          description
+          handle
+          images(first: 1) {
+            edges {
+              node {
+                id
+                url
+                altText
+              }
+            }
+          }
+          variants(first: 1) {
+            edges {
+              node {
+                id
+                price {
+                  amount
+                  currencyCode
+                }
+                title
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+`;
 
 export async function GET() {
   if (!process.env.NEXT_PUBLIC_SHOPIFY_STORE_DOMAIN || !process.env.NEXT_PUBLIC_SHOPIFY_STOREFRONT_ACCESS_KEY) {
@@ -10,11 +46,36 @@ export async function GET() {
   }
 
   try {
-    const { data } = await shopifyClient.query({
-      query: PRODUCTS_QUERY,
-    });
+    console.log('Fetching products from Shopify...');
+    console.log('Store domain:', process.env.NEXT_PUBLIC_SHOPIFY_STORE_DOMAIN);
+    
+    // Use fetch directly to avoid type issues
+    const response = await fetch(
+      `https://${process.env.NEXT_PUBLIC_SHOPIFY_STORE_DOMAIN}/api/2024-07/graphql.json`,
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-Shopify-Storefront-Access-Token': process.env.NEXT_PUBLIC_SHOPIFY_STOREFRONT_ACCESS_KEY,
+        },
+        body: JSON.stringify({
+          query: PRODUCTS_QUERY,
+        }),
+      }
+    );
 
-    const products = data.products.edges.map(({ node }: any) => ({
+    const result = await response.json();
+    
+    console.log('Shopify API Response:', JSON.stringify(result, null, 2));
+
+    if (result.errors) {
+      return NextResponse.json(
+        { error: result.errors[0].message },
+        { status: 400 }
+      );
+    }
+
+    const products = result.data.products.edges.map(({ node }: any) => ({
       id: node.id,
       title: node.title,
       description: node.description,

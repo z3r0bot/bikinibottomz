@@ -3,7 +3,7 @@ import { NextResponse } from 'next/server';
 export async function GET() {
   try {
     const response = await fetch(
-      `${process.env.SHOPIFY_STORE_URL}/api/2024-01/graphql.json`,
+      `${process.env.SHOPIFY_STORE_URL}/api/2024-07/graphql.json`,
       {
         method: 'POST',
         headers: {

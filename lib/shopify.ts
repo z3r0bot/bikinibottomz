@@ -1,20 +1,14 @@
 import { createStorefrontApiClient } from '@shopify/storefront-api-client';
 
-const domain = process.env.NEXT_PUBLIC_SHOPIFY_STORE_DOMAIN || '';
-const storefrontAccessToken = process.env.NEXT_PUBLIC_SHOPIFY_STOREFRONT_ACCESS_KEY || '';
-
 // Create the Shopify client
-const client = createStorefrontApiClient({
-  storeDomain: domain,
-  publicAccessToken: storefrontAccessToken,
-  apiVersion: '2024-01',
+const shopifyClient = createStorefrontApiClient({
+  storeDomain: process.env.NEXT_PUBLIC_SHOPIFY_STORE_DOMAIN || '',
+  publicAccessToken: process.env.NEXT_PUBLIC_SHOPIFY_STOREFRONT_ACCESS_KEY || '',
+  apiVersion: '2024-07',
 });
 
-// Export the client for use in API routes
-export const shopifyClient = client;
-
 // GraphQL queries
-export const PRODUCTS_QUERY = `
+const PRODUCTS_QUERY = `
   query Products {
     products(first: 10) {
       edges {
@@ -50,7 +44,7 @@ export const PRODUCTS_QUERY = `
   }
 `;
 
-export const PRODUCT_BY_HANDLE_QUERY = `
+const PRODUCT_BY_HANDLE_QUERY = `
   query ProductByHandle($handle: String!) {
     product(handle: $handle) {
       id
@@ -83,7 +77,7 @@ export const PRODUCT_BY_HANDLE_QUERY = `
   }
 `;
 
-export const CREATE_CHECKOUT_MUTATION = `
+const CREATE_CHECKOUT_MUTATION = `
   mutation createCheckout($input: CheckoutCreateInput!) {
     checkoutCreate(input: $input) {
       checkout {
@@ -98,6 +92,13 @@ export const CREATE_CHECKOUT_MUTATION = `
     }
   }
 `;
+
+export {
+  shopifyClient,
+  PRODUCTS_QUERY,
+  PRODUCT_BY_HANDLE_QUERY,
+  CREATE_CHECKOUT_MUTATION,
+};
 
 // Function to fetch products from Shopify
 export async function getProducts() {
