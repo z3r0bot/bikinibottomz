@@ -1,11 +1,26 @@
 import { createStorefrontApiClient } from '@shopify/storefront-api-client';
 
-// Create the Shopify client
-const shopifyClient = createStorefrontApiClient({
-  storeDomain: process.env.NEXT_PUBLIC_SHOPIFY_STORE_DOMAIN || '',
-  publicAccessToken: process.env.NEXT_PUBLIC_SHOPIFY_STOREFRONT_ACCESS_KEY || '',
-  apiVersion: '2024-07',
-});
+// Check if we're in a build environment
+const isBuildTime = process.env.NODE_ENV === 'production' && !process.env.NEXT_PUBLIC_SHOPIFY_STOREFRONT_ACCESS_TOKEN;
+
+// Define types for our mock client
+type MockShopifyClient = {
+  query: (query: string, variables?: any) => Promise<any>;
+  request: (query: string, variables?: any) => Promise<any>;
+};
+
+// Create the Shopify client with fallback values
+const shopifyClient: any = isBuildTime 
+  ? {
+      // Mock client for build time
+      query: async (query: string, variables?: any) => ({ data: { products: { edges: [] } } }),
+      request: async (query: string, variables?: any) => ({ data: { products: { edges: [] } } }),
+    }
+  : createStorefrontApiClient({
+      storeDomain: process.env.NEXT_PUBLIC_SHOPIFY_STORE_DOMAIN || 'eswivu-v8.myshopify.com',
+      publicAccessToken: process.env.NEXT_PUBLIC_SHOPIFY_STOREFRONT_ACCESS_TOKEN || 'dummy-token-for-build',
+      apiVersion: '2024-07',
+    });
 
 // GraphQL queries
 const PRODUCTS_QUERY = `
@@ -103,24 +118,15 @@ export {
 // Function to fetch products from Shopify
 export async function getProducts() {
   try {
-    const response = await fetch(
-      `https://${process.env.SHOPIFY_SHOP_NAME}.myshopify.com/admin/api/2023-10/products.json`,
-      {
-        headers: {
-          'X-Shopify-Access-Token': process.env.SHOPIFY_ACCESS_TOKEN || '',
-          'Content-Type': 'application/json',
-        },
-      }
-    );
-    
-    if (!response.ok) {
-      throw new Error(`Shopify API error: ${response.statusText}`);
+    // If we're in build time and don't have a token, return empty data
+    if (isBuildTime) {
+      return [];
     }
     
-    const data = await response.json();
-    return data.products;
+    const response = await shopifyClient.request(PRODUCTS_QUERY);
+    return response.data.products.edges.map((edge: any) => edge.node);
   } catch (error) {
-    console.error('Error fetching products from Shopify:', error);
+    console.error('Error fetching products:', error);
     return [];
   }
 }
@@ -150,36 +156,43 @@ export async function getCollections() {
   }
 }
 
+// Function to fetch a product by handle
+export async function getProductByHandle(handle: string) {
+  try {
+    // If we're in build time and don't have a token, return empty data
+    if (isBuildTime) {
+      return null;
+    }
+    
+    const response = await shopifyClient.request(PRODUCT_BY_HANDLE_QUERY, {
+      handle,
+    });
+    return response.data.product;
+  } catch (error) {
+    console.error(`Error fetching product with handle ${handle}:`, error);
+    return null;
+  }
+}
+
 // Function to create a checkout session
 export async function createCheckout(variantId: string, quantity: number = 1) {
   try {
-    const response = await fetch(
-      `https://${process.env.SHOPIFY_SHOP_NAME}.myshopify.com/admin/api/2023-10/checkouts.json`,
-      {
-        method: 'POST',
-        headers: {
-          'X-Shopify-Access-Token': process.env.SHOPIFY_ACCESS_TOKEN || '',
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          checkout: {
-            line_items: [
-              {
-                variant_id: variantId,
-                quantity: quantity,
-              },
-            ],
-          },
-        }),
-      }
-    );
-    
-    if (!response.ok) {
-      throw new Error(`Shopify API error: ${response.statusText}`);
+    // If we're in build time and don't have a token, return empty data
+    if (isBuildTime) {
+      return null;
     }
     
-    const data = await response.json();
-    return data.checkout;
+    const response = await shopifyClient.request(CREATE_CHECKOUT_MUTATION, {
+      input: {
+        lineItems: [
+          {
+            variantId,
+            quantity,
+          },
+        ],
+      },
+    });
+    return response.data.checkoutCreate.checkout;
   } catch (error) {
     console.error('Error creating checkout:', error);
     return null;
