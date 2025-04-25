@@ -15,6 +15,7 @@ export interface ShopifyVariant {
   id: string;
   price: string;
   title: string;
+  availableForSale: boolean;
 }
 
 export interface ShopifyVariantEdge {

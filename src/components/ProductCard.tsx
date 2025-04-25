@@ -11,13 +11,7 @@ export default function ProductCard({ product }: ProductCardProps) {
   const addItem = useCartStore((state) => state.addItem);
 
   const handleAddToCart = () => {
-    addItem({
-      id: product.variants[0].id,
-      name: product.title,
-      price: parseFloat(product.variants[0].price),
-      image: product.images.edges[0]?.node.url || '',
-      quantity: 1,
-    });
+    addItem(product);
   };
 
   return (
@@ -44,7 +38,7 @@ export default function ProductCard({ product }: ProductCardProps) {
           <p className="mt-1 text-sm text-gray-500">{product.description}</p>
         </div>
         <p className="text-sm font-medium text-gray-900">
-          ${parseFloat(product.variants[0].price).toFixed(2)}
+          ${parseFloat(product.variants.edges[0].node.price).toFixed(2)}
         </p>
       </div>
       <button

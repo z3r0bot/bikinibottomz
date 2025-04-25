@@ -41,16 +41,7 @@ export default function ProductDetailPage() {
 
   const handleAddToCart = () => {
     if (!product) return;
-    
-    const variant = product.variants[selectedVariantIndex];
-    
-    addItem({
-      id: variant.id,
-      name: product.title,
-      price: parseFloat(variant.price),
-      image: product.images.edges[0]?.node.url || '',
-      quantity: quantity
-    });
+    addItem(product);
   };
 
   if (loading) {

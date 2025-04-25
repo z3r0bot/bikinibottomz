@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { Product, fetchAllProducts } from '../../lib/shopify';
+import { Product } from '@/lib/shopify';
 import { useCartStore } from '@/store/cartStore';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -31,16 +31,7 @@ export default function ProductsPage() {
   }, []);
 
   const handleAddToCart = (product: Product) => {
-    // Get the first variant or default to the first one
-    const variant = product.variants[0];
-    
-    addItem({
-      id: variant.id,
-      name: product.title,
-      price: parseFloat(variant.price),
-      image: product.images.edges[0]?.node.url || '',
-      quantity: 1
-    });
+    addItem(product);
   };
 
   if (loading) {
@@ -111,7 +102,7 @@ export default function ProductsPage() {
                 <p className="text-gray-600 mb-4 line-clamp-2">{product.description}</p>
                 <div className="flex justify-between items-center">
                   <span className="text-lg font-bold text-blue-600">
-                    ${parseFloat(product.priceRange.minVariantPrice.amount).toFixed(2)}
+                    ${parseFloat(product.variants.edges[0].node.price).toFixed(2)}
                   </span>
                   <button 
                     onClick={() => handleAddToCart(product)}
