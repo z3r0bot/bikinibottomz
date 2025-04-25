@@ -42,26 +42,26 @@ export default function Navbar() {
   }, []);
 
   return (
-    <nav className="bg-white border-b border-[#ffc367]">
+    <nav className="fixed top-0 left-0 right-0 z-50 transition-all duration-300 bg-transparent hover:bg-white group">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between h-16">
           {/* Left section - Menu button and Logo */}
           <div className="flex items-center relative" ref={menuRef}>
             <button
               onClick={() => setIsMenuOpen(!isMenuOpen)}
-              className="text-[#ff7400] hover:text-[#fd8b17] focus:outline-none transition-colors duration-200"
+              className="text-white group-hover:text-[#ff7400] transition-colors duration-200"
             >
               <Menu className="h-6 w-6" />
             </button>
-            <Link href="/" className="ml-4 flex items-center gap-2">
+            <Link href="/" className="ml-4 flex items-center gap-3">
               <Image
                 src="/images/shell-logo.png"
                 alt="Shell Logo"
-                width={32}
-                height={32}
-                className="w-8 h-8"
+                width={40}
+                height={40}
+                className="w-10 h-10 transition-transform duration-300 group-hover:scale-110"
               />
-              <span className="font-pacifico text-xl text-[#ff7400] hover:text-[#fd8b17] transition-colors duration-200">
+              <span className="font-pacifico text-2xl text-white group-hover:text-[#ff7400] transition-colors duration-200">
                 Bikini Bottoms
               </span>
             </Link>
@@ -103,7 +103,7 @@ export default function Navbar() {
               <Link
                 key={category.name}
                 href={category.href}
-                className="text-gray-600 hover:text-[#ff7400] transition-colors duration-200 font-poppins"
+                className="text-white group-hover:text-gray-800 hover:!text-[#ff7400] transition-colors duration-200 font-poppins"
               >
                 {category.name}
               </Link>
@@ -116,7 +116,7 @@ export default function Navbar() {
             <div className="relative">
               <button
                 onClick={() => setIsCurrencyOpen(!isCurrencyOpen)}
-                className="text-gray-600 hover:text-[#ff7400] transition-colors duration-200 font-poppins"
+                className="text-white group-hover:text-gray-800 hover:!text-[#ff7400] transition-colors duration-200 font-poppins"
               >
                 {currency}
               </button>
@@ -146,7 +146,7 @@ export default function Navbar() {
             </div>
             <Link 
               href="/cart" 
-              className="text-gray-600 hover:text-[#ff7400] transition-colors duration-200 relative"
+              className="text-white group-hover:text-gray-800 hover:!text-[#ff7400] transition-colors duration-200 relative"
             >
               <ShoppingBag className="h-5 w-5" />
               {items.length > 0 && (
