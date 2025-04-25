@@ -159,4 +159,15 @@ export default function CollectionDetailPage() {
       )}
     </div>
   );
+}
+
+// This is used by Next.js to generate static paths at build time
+export async function generateStaticParams() {
+  // For demo purposes, we'll use our mock collections
+  return [
+    { handle: 'summer-collection' },
+    { handle: 'beach-essentials' },
+    { handle: 'accessories' },
+    { handle: 'new-arrivals' }
+  ];
 } 
