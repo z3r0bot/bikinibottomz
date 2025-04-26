@@ -41,8 +41,6 @@ const PRODUCTS_QUERY = `
           handle
           productType
           availableForSale
-          status
-          publishedAt
           images(first: 10) {
             edges {
               node {
