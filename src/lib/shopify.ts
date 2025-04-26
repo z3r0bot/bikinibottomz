@@ -28,11 +28,31 @@ export interface ShopifyVariantConnection {
 
 export interface Product {
   id: string;
-  handle: string;
   title: string;
   description: string;
-  images: ShopifyImageConnection;
-  variants: ShopifyVariantConnection;
+  handle: string;
+  productType: string;
+  images: {
+    edges: Array<{
+      node: {
+        id: string;
+        url: string;
+        altText: string | null;
+      };
+    }>;
+  };
+  variants: {
+    edges: Array<{
+      node: {
+        id: string;
+        price: {
+          amount: string;
+          currencyCode: string;
+        };
+        title: string;
+      };
+    }>;
+  };
 }
 
 export interface Collection {

@@ -33,8 +33,11 @@ export default function ShopPage() {
               </div>
             )}
             <div className="p-4">
-              <h2 className="text-xl font-semibold mb-2">{product.title}</h2>
-              <p className="text-gray-600 mb-4 line-clamp-2">{product.description}</p>
+              <div className="flex flex-col gap-2">
+                <h3 className="text-lg font-semibold line-clamp-1">{product.title}</h3>
+                <p className="text-sm text-gray-600 line-clamp-2">{product.description}</p>
+                <p className="text-sm text-gray-500 italic">Type: {product.product_type || 'N/A'}</p>
+              </div>
               <div className="flex justify-between items-center">
                 <span className="text-lg font-bold">
                   ${parseFloat(product.variants[0]?.price?.amount || '0').toFixed(2)}

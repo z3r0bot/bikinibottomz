@@ -39,6 +39,7 @@ const PRODUCTS_QUERY = `
           title
           description
           handle
+          productType
           images(first: 1) {
             edges {
               node {
