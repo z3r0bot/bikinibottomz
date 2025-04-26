@@ -17,7 +17,7 @@ const shopifyClient = !isBuildTime
   ? createStorefrontApiClient({
       storeDomain: process.env.NEXT_PUBLIC_SHOPIFY_STORE_DOMAIN as string,
       publicAccessToken: process.env.NEXT_PUBLIC_SHOPIFY_STOREFRONT_ACCESS_TOKEN as string,
-      apiVersion: '2024-01',
+      apiVersion: '2024-07',
     })
   : null;
 
