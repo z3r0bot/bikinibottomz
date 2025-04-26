@@ -8,6 +8,8 @@ import SummerTile from './components/tiles/summer-tile.svg';
 import AccessoriesTile from './components/tiles/accessories-tile.svg';
 
 export default function HomePage() {
+  const prefix = process.env.NODE_ENV === 'production' ? '/bikinibottomz' : '';
+
   return (
     <div>
       {/* Hero Section */}
@@ -39,10 +41,10 @@ export default function HomePage() {
             {categories.map((category) => {
               // Map category slug to image filename
               const imgMap: Record<string, string> = {
-                fashion: '/images/categories/tiles/fashion-tile-simple-bell-dress.png',
-                beauty: '/images/categories/tiles/beauty-tile.png',
-                summer: '/images/categories/tiles/summer-tile.png',
-                accessories: '/images/categories/tiles/accessories-tile.png',
+                fashion: `${prefix}/images/categories/tiles/fashion-tile-simple-bell-dress.png`,
+                beauty: `${prefix}/images/categories/tiles/beauty-tile.png`,
+                summer: `${prefix}/images/categories/tiles/summer-tile.png`,
+                accessories: `${prefix}/images/categories/tiles/accessories-tile.png`,
               };
               return (
                 <Link key={category.name} href={`/categories/${category.slug}`}>
