@@ -9,6 +9,13 @@ const nextConfig = {
   basePath: process.env.NODE_ENV === 'production' ? '/bikinibottomz' : '', // Add basePath for GitHub Pages
   assetPrefix: process.env.NODE_ENV === 'production' ? '/bikinibottomz/' : '', // Add assetPrefix for GitHub Pages
   trailingSlash: true,
+  webpack(config) {
+    config.module.rules.push({
+      test: /\.svg$/,
+      use: ['@svgr/webpack'],
+    });
+    return config;
+  },
 };
 
 module.exports = nextConfig 

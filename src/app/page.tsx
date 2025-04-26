@@ -2,6 +2,10 @@
 
 import Link from 'next/link';
 import Image from 'next/image';
+import FashionTile from './components/tiles/fashion-tile-simple-bell-dress.svg';
+import BeautyTile from './components/tiles/beauty-tile.svg';
+import SummerTile from './components/tiles/summer-tile.svg';
+import AccessoriesTile from './components/tiles/accessories-tile.svg';
 
 export default function HomePage() {
   return (
@@ -34,18 +38,20 @@ export default function HomePage() {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
             {categories.map((category) => {
               // Map category slug to SVG filename
-              const svgMap: Record<string, string> = {
-                fashion: '/images/categories/tiles/fashion-tile-simple-bell-dress.svg',
-                beauty: '/images/categories/tiles/beauty-tile.svg',
-                summer: '/images/categories/tiles/summer-tile.svg',
-                accessories: '/images/categories/tiles/accessories-tile.svg',
+              const svgMap: Record<string, React.FC<React.SVGProps<SVGSVGElement>>> = {
+                fashion: FashionTile,
+                beauty: BeautyTile,
+                summer: SummerTile,
+                accessories: AccessoriesTile,
               };
-              const svgSrc = svgMap[category.slug as keyof typeof svgMap] || '';
               return (
                 <Link key={category.name} href={`/categories/${category.slug}`}>
-                  <div className="aspect-square bg-primary-light rounded-lg p-6 flex flex-col items-center justify-center hover:scale-105 transition-transform">
+                  <div className="aspect-square border-2 border-dashed border-orange-400 rounded-lg flex flex-col items-center justify-center hover:scale-105 transition-transform bg-white">
                     <div className="w-28 h-28 mb-4 flex items-center justify-center">
-                      <img src="/shell-logo.png" alt="Test" className="w-full h-full object-contain" />
+                      {(() => {
+                        const SvgIcon = svgMap[category.slug];
+                        return SvgIcon ? <SvgIcon className="w-full h-full object-contain" /> : null;
+                      })()}
                     </div>
                     <h3 className="text-xl font-semibold text-center">{category.name}</h3>
                   </div>
