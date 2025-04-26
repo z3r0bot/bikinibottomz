@@ -32,7 +32,7 @@ console.log('Shopify Configuration:', {
 // GraphQL queries
 const PRODUCTS_QUERY = `
   query Products {
-    products(first: 250) {
+    products(first: 25, sortKey: CREATED_AT, reverse: true) {
       edges {
         node {
           id
@@ -41,6 +41,8 @@ const PRODUCTS_QUERY = `
           handle
           productType
           availableForSale
+          status
+          publishedAt
           images(first: 10) {
             edges {
               node {

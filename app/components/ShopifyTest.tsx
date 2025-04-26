@@ -1,50 +1,39 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { useShopify } from '../context/ShopifyContext';
 
 export default function ShopifyTest() {
-  const { products, isLoading, error, refreshProducts } = useShopify();
-  const [debugInfo, setDebugInfo] = useState({
-    domain: process.env.NEXT_PUBLIC_SHOPIFY_STORE_DOMAIN || 'Not set',
-    hasToken: !!process.env.NEXT_PUBLIC_SHOPIFY_STOREFRONT_ACCESS_TOKEN,
-  });
+  const { products, isLoading, error } = useShopify();
 
   useEffect(() => {
-    refreshProducts();
-  }, [refreshProducts]);
+    console.log('Raw Shopify Data:', {
+      products,
+      isLoading,
+      error,
+      productsCount: products?.length || 0,
+      firstProduct: products?.[0],
+    });
+  }, [products, isLoading, error]);
 
+  if (isLoading) return <div>Loading Shopify data...</div>;
+  if (error) return <div>Error: {error}</div>;
+  
   return (
-    <div className="fixed bottom-4 right-4 bg-white p-4 rounded-lg shadow-lg border border-gray-200 z-50 max-w-md">
-      <h3 className="font-bold mb-2">Shopify Debug Info</h3>
-      <pre className="text-xs whitespace-pre-wrap overflow-auto max-h-60">
-        {JSON.stringify({
-          debugInfo,
-          productCount: products.length,
-          isLoading,
-          error,
-          products: products.map(p => ({
-            title: p.title,
-            handle: p.handle,
-            type: p.product_type,
-            hasImages: p.images?.length > 0,
-            variants: p.variants?.length
-          }))
-        }, null, 2)}
-      </pre>
-      <div className="mt-4 space-y-2">
-        <button 
-          onClick={refreshProducts}
-          className="w-full px-3 py-1 bg-blue-500 text-white rounded hover:bg-blue-600 text-sm"
-        >
-          Refresh Products
-        </button>
-        <button 
-          onClick={() => window.location.href = '/products'}
-          className="w-full px-3 py-1 bg-green-500 text-white rounded hover:bg-green-600 text-sm"
-        >
-          View Products Page
-        </button>
+    <div className="p-4 bg-white/90 rounded-lg shadow">
+      <h2 className="text-lg font-bold mb-2">Shopify Test</h2>
+      <div className="space-y-2">
+        <p>Products Count: {products?.length || 0}</p>
+        <p>Store Domain: {process.env.NEXT_PUBLIC_SHOPIFY_STORE_DOMAIN}</p>
+        <p>Has Token: {process.env.NEXT_PUBLIC_SHOPIFY_STOREFRONT_ACCESS_TOKEN ? 'Yes' : 'No'}</p>
+        {products?.length > 0 && (
+          <div>
+            <h3 className="font-semibold mt-4">First Product:</h3>
+            <pre className="text-xs mt-2 bg-gray-100 p-2 rounded overflow-auto">
+              {JSON.stringify(products[0], null, 2)}
+            </pre>
+          </div>
+        )}
       </div>
     </div>
   );

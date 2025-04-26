@@ -9,6 +9,7 @@ import { useEffect } from 'react';
 import { getProducts } from '../lib/shopify';
 import { useShopify } from './context/ShopifyContext';
 import ShopifyDebug from './components/ShopifyDebug';
+import ShopifyTest from './components/ShopifyTest';
 
 export default function Home() {
   const { products, isLoading, error } = useShopify();
@@ -122,6 +123,11 @@ export default function Home() {
 
       {/* Trending Products Section */}
       <TrendingProducts />
+
+      {/* Debug Section */}
+      <div className="fixed bottom-4 right-4 z-50">
+        <ShopifyTest />
+      </div>
     </div>
   );
 } 
