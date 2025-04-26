@@ -1,46 +1,55 @@
 'use client';
 
+import { useEffect, useState, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
+import { ShopifyProduct } from '../context/ShopifyContext';
 import CategoryPage from '../components/CategoryPage';
-import { Suspense } from 'react';
-
-// This would typically come from your API based on the search query
-const searchProducts = (query: string) => {
-  // Mock data - in a real app, this would search your product database
-  const allProducts = [
-    {
-      id: '1',
-      name: 'Summer Dress',
-      price: 89.99,
-      image: '/images/products/summer-dress.jpg',
-      handle: 'summer-dress'
-    },
-    {
-      id: '2',
-      name: 'Beach Cover Up',
-      price: 49.99,
-      image: '/images/products/beach-cover-up.jpg',
-      handle: 'beach-cover-up'
-    },
-    {
-      id: '3',
-      name: 'Crystal Necklace',
-      price: 79.99,
-      image: '/images/products/crystal-necklace.jpg',
-      handle: 'crystal-necklace'
-    },
-    // Add more products as needed
-  ];
-
-  return allProducts.filter(product =>
-    product.name.toLowerCase().includes(query.toLowerCase())
-  );
-};
 
 function SearchResults() {
   const searchParams = useSearchParams();
   const query = searchParams.get('q') || '';
-  const products = searchProducts(query);
+  const [products, setProducts] = useState<ShopifyProduct[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    async function searchProducts() {
+      try {
+        setLoading(true);
+        setError(null);
+        const response = await fetch(`/api/search?q=${encodeURIComponent(query)}`);
+        if (!response.ok) {
+          throw new Error('Failed to search products');
+        }
+        const data = await response.json();
+        setProducts(data);
+      } catch (err) {
+        console.error('Error searching products:', err);
+        setError('Failed to search products. Please try again later.');
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    if (query) {
+      searchProducts();
+    } else {
+      setProducts([]);
+      setLoading(false);
+    }
+  }, [query]);
+
+  if (loading) {
+    return <div className="text-center p-8">Searching products...</div>;
+  }
+
+  if (error) {
+    return <div className="text-center p-8 text-red-500">Error: {error}</div>;
+  }
+
+  if (!query) {
+    return <div className="text-center p-8">Please enter a search term.</div>;
+  }
 
   return (
     <CategoryPage
@@ -53,7 +62,7 @@ function SearchResults() {
 
 export default function SearchPage() {
   return (
-    <Suspense fallback={<div>Loading...</div>}>
+    <Suspense fallback={<div className="text-center p-8">Loading...</div>}>
       <SearchResults />
     </Suspense>
   );

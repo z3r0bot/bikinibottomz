@@ -1,10 +1,26 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { Collection, Product } from '@/lib/shopify';
+import { ShopifyProduct } from '../../../app/context/ShopifyContext';
 import { useCartStore } from '@/store/cartStore';
 import Image from 'next/image';
 import Link from 'next/link';
+
+interface Collection {
+  id: string;
+  handle: string;
+  title: string;
+  description: string;
+  image: {
+    url: string;
+    altText: string | null;
+  } | null;
+  products: {
+    edges: {
+      node: ShopifyProduct;
+    }[];
+  };
+}
 
 export default function CollectionDetailClient({ handle }: { handle: string }) {
   const [collection, setCollection] = useState<Collection | null>(null);
@@ -37,7 +53,7 @@ export default function CollectionDetailClient({ handle }: { handle: string }) {
     }
   }, [handle]);
 
-  const handleAddToCart = (product: Product) => {
+  const handleAddToCart = (product: ShopifyProduct) => {
     addItem(product);
   };
 
@@ -54,15 +70,8 @@ export default function CollectionDetailClient({ handle }: { handle: string }) {
   if (error || !collection) {
     return (
       <div className="container mx-auto px-4 py-8">
-        <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded relative" role="alert">
-          <strong className="font-bold">Error!</strong>
-          <span className="block sm:inline"> {error || 'Collection not found'}</span>
-          <Link 
-            href="/collections" 
-            className="mt-2 inline-block bg-red-100 hover:bg-red-200 text-red-800 font-semibold py-1 px-4 rounded"
-          >
-            Back to Collections
-          </Link>
+        <div className="text-center text-red-500">
+          {error || 'Collection not found'}
         </div>
       </div>
     );
@@ -70,66 +79,32 @@ export default function CollectionDetailClient({ handle }: { handle: string }) {
 
   return (
     <div className="container mx-auto px-4 py-8">
-      <div className="mb-4">
-        <Link href="/collections" className="text-blue-600 hover:text-blue-800 flex items-center">
-          <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-1" viewBox="0 0 20 20" fill="currentColor">
-            <path fillRule="evenodd" d="M9.707 16.707a1 1 0 01-1.414 0l-6-6a1 1 0 010-1.414l6-6a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l4.293 4.293a1 1 0 010 1.414z" clipRule="evenodd" />
-          </svg>
-          Back to Collections
-        </Link>
-      </div>
-
-      {/* Collection Header */}
-      <div className="mb-8">
-        <h1 className="text-3xl font-bold mb-2">{collection.title}</h1>
+      <div className="text-center mb-12">
+        <h1 className="text-4xl font-bold text-gray-900 mb-4">{collection.title}</h1>
         {collection.description && (
-          <p className="text-gray-600 max-w-3xl">{collection.description}</p>
+          <p className="text-lg text-gray-600">{collection.description}</p>
         )}
       </div>
 
-      {/* Collection Image */}
-      {collection.image && (
-        <div className="relative w-full h-64 md:h-96 mb-8 rounded-lg overflow-hidden">
-          <Image
-            src={collection.image.url}
-            alt={collection.image.altText || collection.title}
-            fill
-            className="object-cover"
-            sizes="100vw"
-            priority
-          />
-        </div>
-      )}
-
-      {/* Products Grid */}
       {collection.products.edges.length === 0 ? (
-        <div className="text-center py-12">
-          <p className="text-gray-600 text-lg mb-4">No products found in this collection.</p>
-          <Link href="/products" className="text-blue-600 hover:text-blue-800">
-            Browse All Products
-          </Link>
-        </div>
+        <p className="text-center text-gray-600">No products found in this collection.</p>
       ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {collection.products.edges.map(({ node: product }) => (
             <div key={product.id} className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300">
               <Link href={`/products/${product.handle}`}>
-                <div className="aspect-w-1 aspect-h-1 relative">
-                  {product.images.edges[0]?.node.url ? (
+                <div className="relative h-64">
+                  {product.images[0] && (
                     <Image
-                      src={product.images.edges[0].node.url}
-                      alt={product.images.edges[0].node.altText || product.title}
+                      src={product.images[0].src}
+                      alt={product.images[0].alt || product.title}
                       fill
                       className="object-cover"
-                      sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
                     />
-                  ) : (
-                    <div className="w-full h-64 bg-gray-200 flex items-center justify-center">
-                      <span className="text-gray-400">No image available</span>
-                    </div>
                   )}
                 </div>
               </Link>
+
               <div className="p-4">
                 <Link href={`/products/${product.handle}`}>
                   <h2 className="text-xl font-semibold mb-2 text-gray-800 hover:text-blue-600 transition-colors">
@@ -139,7 +114,7 @@ export default function CollectionDetailClient({ handle }: { handle: string }) {
                 <p className="text-gray-600 mb-4 line-clamp-2">{product.description}</p>
                 <div className="flex justify-between items-center">
                   <span className="text-lg font-bold text-blue-600">
-                    ${parseFloat(product.variants.edges[0].node.price).toFixed(2)}
+                    ${parseFloat(product.variants[0]?.price?.amount || '0').toFixed(2)}
                   </span>
                   <button 
                     onClick={() => handleAddToCart(product)}

@@ -1,13 +1,13 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { Product } from '@/lib/shopify';
+import { ShopifyProduct, ShopifyVariant } from '../../../app/context/ShopifyContext';
 import { useCartStore } from '@/store/cartStore';
 import Image from 'next/image';
 import Link from 'next/link';
 
 export default function ProductDetailClient({ handle }: { handle: string }) {
-  const [product, setProduct] = useState<Product | null>(null);
+  const [product, setProduct] = useState<ShopifyProduct | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [selectedVariantIndex, setSelectedVariantIndex] = useState(0);
@@ -57,41 +57,25 @@ export default function ProductDetailClient({ handle }: { handle: string }) {
   if (error || !product) {
     return (
       <div className="container mx-auto px-4 py-8">
-        <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded relative" role="alert">
-          <strong className="font-bold">Error!</strong>
-          <span className="block sm:inline"> {error || 'Product not found'}</span>
-          <Link 
-            href="/products" 
-            className="mt-2 inline-block bg-red-100 hover:bg-red-200 text-red-800 font-semibold py-1 px-4 rounded"
-          >
-            Back to Products
-          </Link>
+        <div className="text-center text-red-500">
+          {error || 'Product not found'}
         </div>
       </div>
     );
   }
 
-  const selectedVariant = product.variants.edges[selectedVariantIndex].node;
-  const mainImage = product.images.edges[0]?.node;
+  const selectedVariant = product.variants[selectedVariantIndex] || product.variants[0];
+  const mainImage = product.images[0];
 
   return (
     <div className="container mx-auto px-4 py-8">
-      <div className="mb-4">
-        <Link href="/products" className="text-blue-600 hover:text-blue-800 flex items-center">
-          <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-1" viewBox="0 0 20 20" fill="currentColor">
-            <path fillRule="evenodd" d="M9.707 16.707a1 1 0 01-1.414 0l-6-6a1 1 0 010-1.414l6-6a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l4.293 4.293a1 1 0 010 1.414z" clipRule="evenodd" />
-          </svg>
-          Back to Products
-        </Link>
-      </div>
-
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
         {/* Product Image */}
         <div className="relative aspect-square bg-gray-100 rounded-lg overflow-hidden">
           {mainImage ? (
             <Image
-              src={mainImage.url}
-              alt={mainImage.altText || product.title}
+              src={mainImage.src}
+              alt={mainImage.alt || product.title}
               fill
               className="object-cover"
               sizes="(max-width: 768px) 100vw, 50vw"
@@ -108,7 +92,7 @@ export default function ProductDetailClient({ handle }: { handle: string }) {
         <div>
           <h1 className="text-3xl font-bold mb-2">{product.title}</h1>
           <p className="text-2xl font-bold text-blue-600 mb-4">
-            ${parseFloat(selectedVariant.price).toFixed(2)}
+            ${parseFloat(selectedVariant.price.amount).toFixed(2)}
           </p>
           
           <div className="mb-6">
@@ -116,13 +100,13 @@ export default function ProductDetailClient({ handle }: { handle: string }) {
           </div>
           
           {/* Variant Selection */}
-          {product.variants.edges.length > 1 && (
+          {product.variants.length > 1 && (
             <div className="mb-6">
               <label className="block text-sm font-medium text-gray-700 mb-2">
                 Select Variant
               </label>
               <div className="grid grid-cols-2 gap-2">
-                {product.variants.edges.map(({ node: variant }, index) => (
+                {product.variants.map((variant: ShopifyVariant, index: number) => (
                   <button
                     key={variant.id}
                     onClick={() => setSelectedVariantIndex(index)}
@@ -170,14 +154,9 @@ export default function ProductDetailClient({ handle }: { handle: string }) {
           {/* Add to Cart Button */}
           <button
             onClick={handleAddToCart}
-            disabled={!selectedVariant.availableForSale}
-            className={`w-full py-3 px-4 rounded-md text-white font-medium ${
-              selectedVariant.availableForSale
-                ? 'bg-blue-600 hover:bg-blue-700'
-                : 'bg-gray-400 cursor-not-allowed'
-            }`}
+            className="w-full py-3 px-4 rounded-md text-white font-medium bg-blue-600 hover:bg-blue-700"
           >
-            {selectedVariant.availableForSale ? 'Add to Cart' : 'Out of Stock'}
+            Add to Cart
           </button>
         </div>
       </div>

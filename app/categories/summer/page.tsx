@@ -1,25 +1,24 @@
+'use client';
+
+import { useShopify } from '../../context/ShopifyContext';
 import CategoryPage from '../../components/CategoryPage';
 
-// This would typically come from your CMS or API
-const summerProducts = [
-  {
-    id: '1',
-    name: 'Beach Umbrella',
-    price: 59.99,
-    image: '/images/products/beach-umbrella.jpg',
-    handle: 'beach-umbrella'
-  },
-  {
-    id: '2',
-    name: 'Beach Towel Set',
-    price: 39.99,
-    image: '/images/products/beach-towel-set.jpg',
-    handle: 'beach-towel-set'
-  },
-  // Add more products as needed
-];
-
 export default function SummerPage() {
+  const { products, isLoading, error } = useShopify();
+  
+  // Filter products for summer category
+  const summerProducts = products.filter(product => 
+    product.product_type.toLowerCase() === 'summer'
+  );
+
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
+
+  if (error) {
+    return <div>Error: {error}</div>;
+  }
+
   return (
     <CategoryPage
       title="Summer Collection"

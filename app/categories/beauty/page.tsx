@@ -1,25 +1,24 @@
+'use client';
+
+import { useShopify } from '../../context/ShopifyContext';
 import CategoryPage from '../../components/CategoryPage';
 
-// This would typically come from your CMS or API
-const beautyProducts = [
-  {
-    id: '1',
-    name: 'Ocean Breeze Face Cream',
-    price: 29.99,
-    image: '/images/products/face-cream.jpg',
-    handle: 'ocean-breeze-face-cream'
-  },
-  {
-    id: '2',
-    name: 'Seaweed Hair Mask',
-    price: 24.99,
-    image: '/images/products/hair-mask.jpg',
-    handle: 'seaweed-hair-mask'
-  },
-  // Add more products as needed
-];
-
 export default function BeautyPage() {
+  const { products, isLoading, error } = useShopify();
+  
+  // Filter products for beauty category
+  const beautyProducts = products.filter(product => 
+    product.product_type.toLowerCase() === 'beauty'
+  );
+
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
+
+  if (error) {
+    return <div>Error: {error}</div>;
+  }
+
   return (
     <CategoryPage
       title="Beauty Collection"

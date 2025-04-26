@@ -81,22 +81,24 @@ export default function Cart() {
                   <div key={item.product.id} className="flex items-center justify-between border-b pb-4">
                     <div className="flex items-center space-x-4">
                       <div className="relative h-16 w-16 rounded overflow-hidden">
-                        <Image
-                          src={item.product.images.edges[0]?.node.url || ''}
-                          alt={item.product.images.edges[0]?.node.altText || item.product.title}
-                          fill
-                          className="object-cover"
-                          sizes="64px"
-                        />
+                        {item.product.images[0] && (
+                          <Image
+                            src={item.product.images[0].src}
+                            alt={item.product.images[0].alt || item.product.title}
+                            fill
+                            className="object-cover"
+                            sizes="64px"
+                          />
+                        )}
                       </div>
                       <div>
                         <h3 className="text-sm font-medium">{item.product.title}</h3>
                         <p className="text-sm text-gray-500">
-                          ${parseFloat(item.product.variants.edges[0].node.price).toFixed(2)}
+                          ${parseFloat(item.product.variants[0]?.price?.amount || '0').toFixed(2)}
                         </p>
                       </div>
                     </div>
-                    <div className="flex items-center space-x-2">
+                    <div className="flex items-center space-x-4">
                       <input
                         type="number"
                         min="1"

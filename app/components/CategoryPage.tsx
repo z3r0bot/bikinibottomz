@@ -2,19 +2,12 @@
 
 import Image from 'next/image';
 import Link from 'next/link';
-
-interface Product {
-  id: string;
-  name: string;
-  price: number;
-  image: string;
-  handle: string;
-}
+import { ShopifyProduct } from '../context/ShopifyContext';
 
 interface CategoryPageProps {
   title: string;
   description: string;
-  products: Product[];
+  products: ShopifyProduct[];
 }
 
 export default function CategoryPage({ title, description, products }: CategoryPageProps) {
@@ -34,17 +27,17 @@ export default function CategoryPage({ title, description, products }: CategoryP
           >
             <div className="aspect-w-1 aspect-h-1 w-full overflow-hidden rounded-lg bg-gray-200">
               <Image
-                src={product.image}
-                alt={product.name}
+                src={product.images[0]?.src || '/images/placeholder.jpg'}
+                alt={product.images[0]?.alt || product.title}
                 width={500}
                 height={500}
                 className="h-full w-full object-cover object-center group-hover:opacity-75"
               />
             </div>
             <div className="mt-4">
-              <h3 className="text-sm font-medium text-gray-900">{product.name}</h3>
+              <h3 className="text-sm font-medium text-gray-900">{product.title}</h3>
               <p className="mt-1 text-sm font-medium text-gray-900">
-                ${product.price.toFixed(2)}
+                ${parseFloat(product.variants[0]?.price?.amount || '0').toFixed(2)}
               </p>
             </div>
           </Link>

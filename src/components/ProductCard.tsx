@@ -1,10 +1,10 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import { useCartStore } from '@/store/cartStore';
-import { Product } from '@/lib/shopify';
+import { ShopifyProduct } from '../../app/context/ShopifyContext';
 
 interface ProductCardProps {
-  product: Product;
+  product: ShopifyProduct;
 }
 
 export default function ProductCard({ product }: ProductCardProps) {
@@ -18,13 +18,15 @@ export default function ProductCard({ product }: ProductCardProps) {
     <div className="group relative">
       <div className="aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-md bg-gray-200 lg:aspect-none group-hover:opacity-75 lg:h-80">
         <Link href={`/products/${product.handle}`}>
-          <Image
-            src={product.images.edges[0]?.node.url || ''}
-            alt={product.images.edges[0]?.node.altText || product.title}
-            width={500}
-            height={500}
-            className="h-full w-full object-cover object-center lg:h-full lg:w-full"
-          />
+          {product.images[0] && (
+            <Image
+              src={product.images[0].src}
+              alt={product.images[0].alt || product.title}
+              width={500}
+              height={500}
+              className="h-full w-full object-cover object-center lg:h-full lg:w-full"
+            />
+          )}
         </Link>
       </div>
       <div className="mt-4 flex justify-between">
@@ -38,7 +40,7 @@ export default function ProductCard({ product }: ProductCardProps) {
           <p className="mt-1 text-sm text-gray-500">{product.description}</p>
         </div>
         <p className="text-sm font-medium text-gray-900">
-          ${parseFloat(product.variants.edges[0].node.price).toFixed(2)}
+          ${parseFloat(product.variants[0]?.price?.amount || '0').toFixed(2)}
         </p>
       </div>
       <button

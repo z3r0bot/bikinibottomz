@@ -2,8 +2,6 @@
 
 import { useCartStore } from '@/store/cartStore';
 import Image from 'next/image';
-import Link from 'next/link';
-import { Trash2 } from 'lucide-react';
 
 export default function CartPage() {
   const { items, removeItem, updateQuantity, getTotalPrice } = useCartStore();
