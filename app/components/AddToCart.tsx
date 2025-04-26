@@ -1,7 +1,6 @@
 'use client';
 
 import { useState } from 'react';
-import { useRouter } from 'next/navigation';
 
 interface AddToCartProps {
   variantId: string;
@@ -12,7 +11,6 @@ interface AddToCartProps {
 export default function AddToCart({ variantId, title, price }: AddToCartProps) {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const router = useRouter();
 
   const handleCheckout = async () => {
     try {

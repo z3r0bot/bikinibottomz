@@ -1,6 +1,7 @@
 'use client';
 
-import { useCartStore } from '@/store/cartStore';
+import { useCartStore, CartItem } from '@/store/cartStore';
+import { ShopifyProduct } from '../context/ShopifyContext';
 import Image from 'next/image';
 import Link from 'next/link';
 import { Trash2 } from 'lucide-react';
@@ -8,71 +9,80 @@ import { Trash2 } from 'lucide-react';
 export default function CartPage() {
   const { items, removeItem, updateQuantity, getTotalPrice } = useCartStore();
 
-  if (items.length === 0) {
-    return (
-      <div className="container mx-auto px-4 py-8 text-center">
-        <h1 className="text-3xl font-bold mb-4">Your Cart</h1>
-        <p className="text-gray-600">Your cart is empty</p>
-      </div>
-    );
-  }
+  const handleRemove = (productId: string) => {
+    removeItem(productId);
+  };
+
+  const handleQuantityChange = (productId: string, newQuantity: number) => {
+    if (newQuantity > 0) {
+      updateQuantity(productId, newQuantity);
+    }
+  };
 
   return (
     <div className="container mx-auto px-4 py-8">
       <h1 className="text-3xl font-bold mb-8">Your Cart</h1>
-      <div className="bg-white rounded-lg shadow-md p-6">
-        {items.map((item) => (
-          <div key={item.product.id} className="flex items-center py-4 border-b last:border-b-0">
-            <div className="relative h-24 w-24 flex-shrink-0">
-              {item.product.images[0] && (
+      {items.length === 0 ? (
+        <div className="text-center">
+          <p className="text-lg mb-4">Your cart is empty</p>
+          <Link href="/shop" className="text-blue-600 hover:text-blue-800">
+            Continue Shopping
+          </Link>
+        </div>
+      ) : (
+        <div className="space-y-4">
+          {items.map((item: CartItem) => (
+            <div key={item.product.id} className="flex items-center border p-4 rounded-lg">
+              <div className="relative w-24 h-24 mr-4">
                 <Image
-                  src={item.product.images[0].src}
+                  src={item.product.images[0]?.src || '/placeholder.jpg'}
                   alt={item.product.title}
                   fill
                   className="object-cover rounded"
                 />
-              )}
-            </div>
-            <div className="ml-4 flex-grow">
-              <h2 className="text-lg font-semibold">{item.product.title}</h2>
-              <p className="text-gray-600">
-                ${parseFloat(item.product.variants[0]?.price?.amount || '0').toFixed(2)}
-              </p>
-            </div>
-            <div className="flex items-center space-x-4">
-              <div className="flex items-center space-x-2">
-                <button
-                  onClick={() => updateQuantity(item.product.id, Math.max(1, item.quantity - 1))}
-                  className="bg-gray-200 px-2 py-1 rounded"
-                >
-                  -
-                </button>
-                <span className="w-8 text-center">{item.quantity}</span>
-                <button
-                  onClick={() => updateQuantity(item.product.id, item.quantity + 1)}
-                  className="bg-gray-200 px-2 py-1 rounded"
-                >
-                  +
-                </button>
+              </div>
+              <div className="flex-grow">
+                <h3 className="text-lg font-semibold">{item.product.title}</h3>
+                <p className="text-gray-600">
+                  ${parseFloat(item.product.variants[0]?.price?.amount || '0').toFixed(2)}
+                </p>
+                <div className="flex items-center mt-2">
+                  <button
+                    onClick={() => handleQuantityChange(item.product.id, item.quantity - 1)}
+                    className="px-2 py-1 border rounded"
+                  >
+                    -
+                  </button>
+                  <span className="mx-2">{item.quantity}</span>
+                  <button
+                    onClick={() => handleQuantityChange(item.product.id, item.quantity + 1)}
+                    className="px-2 py-1 border rounded"
+                  >
+                    +
+                  </button>
+                </div>
               </div>
               <button
-                onClick={() => removeItem(item.product.id)}
-                className="text-red-500 hover:text-red-700"
+                onClick={() => handleRemove(item.product.id)}
+                className="text-red-600 hover:text-red-800"
               >
-                Remove
+                <Trash2 size={20} />
               </button>
             </div>
+          ))}
+          <div className="mt-8 text-right">
+            <p className="text-xl font-bold">
+              Total: ${getTotalPrice().toFixed(2)}
+            </p>
+            <Link
+              href="/checkout"
+              className="inline-block mt-4 px-6 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+            >
+              Proceed to Checkout
+            </Link>
           </div>
-        ))}
-        <div className="mt-6 flex justify-between items-center">
-          <div className="text-xl font-bold">
-            Total: ${getTotalPrice().toFixed(2)}
-          </div>
-          <button className="bg-blue-500 text-white px-6 py-2 rounded hover:bg-blue-600 transition-colors">
-            Checkout
-          </button>
         </div>
-      </div>
+      )}
     </div>
   );
 } 

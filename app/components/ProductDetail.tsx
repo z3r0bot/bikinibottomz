@@ -1,15 +1,17 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { ShopifyProduct, ShopifyVariant, useShopify } from '../../../app/context/ShopifyContext';
+import { ShopifyProduct, ShopifyVariant, useShopify } from '../context/ShopifyContext';
 import { useCartStore } from '@/store/cartStore';
 import Image from 'next/image';
+import { useRouter } from 'next/navigation';
 
-export default function ProductDetailClient({ handle }: { handle: string }) {
+export default function ProductDetail({ handle }: { handle: string }) {
   const { products } = useShopify();
   const [selectedVariantIndex, setSelectedVariantIndex] = useState(0);
   const [quantity, setQuantity] = useState(1);
   const { addItem } = useCartStore();
+  const router = useRouter();
 
   // Find the product with matching handle
   const product = products.find(p => p.handle === handle);
@@ -34,6 +36,13 @@ export default function ProductDetailClient({ handle }: { handle: string }) {
 
   return (
     <div className="container mx-auto px-4 py-8">
+      <button
+        onClick={() => router.back()}
+        className="mb-6 text-[#ff7400] hover:text-[#ff7400]/80 transition-colors"
+      >
+        ← Back to Products
+      </button>
+
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
         {/* Product Image */}
         <div className="relative aspect-square bg-gray-100 rounded-lg overflow-hidden">

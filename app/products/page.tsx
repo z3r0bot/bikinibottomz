@@ -1,77 +1,52 @@
 'use client';
 
-import { useEffect } from 'react';
+import { Suspense } from 'react';
 import { useShopify } from '../context/ShopifyContext';
-import LoadingState from '../components/LoadingState';
-import Image from 'next/image';
-import Link from 'next/link';
+import { useSearchParams } from 'next/navigation';
+import ProductDetail from '../components/ProductDetail';
+import ProductGrid from '../components/ProductGrid';
 
-export default function ProductsPage() {
-  const { products, isLoading, error, refreshProducts } = useShopify();
-
-  useEffect(() => {
-    refreshProducts();
-  }, [refreshProducts]);
+function ProductContent() {
+  const { products, isLoading } = useShopify();
+  const searchParams = useSearchParams();
+  const productHandle = searchParams.get('product');
 
   if (isLoading) {
-    return <LoadingState />;
-  }
-
-  if (error) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <p className="text-red-500 text-center font-raleway">{error}</p>
+      <div className="container mx-auto px-4 py-8">
+        <div className="flex justify-center items-center min-h-[400px]">
+          <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-[#ff7400]"></div>
+        </div>
       </div>
     );
   }
 
-  return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-      <h1 className="text-4xl font-dancing text-center mb-12">Our Products</h1>
-      
-      {products.length === 0 ? (
-        <p className="text-center font-raleway">No products found.</p>
-      ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-          {products.map((product) => {
-            const image = product.images[0];
-            const variant = product.variants[0];
-            const price = variant?.price?.amount || '0.00';
+  // If a product handle is specified, show the product detail view
+  if (productHandle) {
+    return <ProductDetail handle={productHandle} />;
+  }
 
-            return (
-              <Link 
-                href={`/products/${product.handle}`} 
-                key={product.id}
-                className="group"
-              >
-                <div className="relative aspect-square overflow-hidden rounded-lg bg-gray-100 mb-4">
-                  {image ? (
-                    <Image
-                      src={image.src}
-                      alt={image.alt || product.title}
-                      fill
-                      className="object-cover object-center group-hover:scale-105 transition-transform duration-300 vintage-filter"
-                    />
-                  ) : (
-                    <div className="absolute inset-0 flex items-center justify-center bg-gray-200">
-                      <span className="text-gray-400">No image</span>
-                    </div>
-                  )}
-                </div>
-                
-                <div className="text-center">
-                  <h2 className="text-lg font-medium font-raleway text-gray-900 mb-2">
-                    {product.title}
-                  </h2>
-                  <p className="text-[#ff7400] font-raleway">
-                    ${parseFloat(price).toFixed(2)}
-                  </p>
-                </div>
-              </Link>
-            );
-          })}
-        </div>
-      )}
+  // Otherwise, show the product grid
+  return (
+    <div className="container mx-auto px-4 py-8">
+      <h1 className="text-4xl font-dancing font-bold text-center mb-8">Our Products</h1>
+      <ProductGrid products={products} />
     </div>
+  );
+}
+
+export default function ProductsPage() {
+  return (
+    <Suspense
+      fallback={
+        <div className="container mx-auto px-4 py-8">
+          <div className="flex justify-center items-center min-h-[400px]">
+            <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-[#ff7400]"></div>
+          </div>
+        </div>
+      }
+    >
+      <ProductContent />
+    </Suspense>
   );
 } 

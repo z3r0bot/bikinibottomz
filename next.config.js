@@ -8,6 +8,7 @@ const nextConfig = {
   },
   basePath: process.env.NODE_ENV === 'production' ? '/bikinibottomz' : '', // Add basePath for GitHub Pages
   assetPrefix: process.env.NODE_ENV === 'production' ? '/bikinibottomz/' : '', // Add assetPrefix for GitHub Pages
-}
+  trailingSlash: true,
+};
 
 module.exports = nextConfig 

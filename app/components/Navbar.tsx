@@ -2,9 +2,8 @@
 
 import { useState, useRef, useEffect } from 'react';
 import Link from 'next/link';
-import Image from 'next/image';
 import { useCartStore } from '@/store/cartStore';
-import { Menu, X, ShoppingBag, Search } from 'lucide-react';
+import { Menu, ShoppingBag, Search } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 export default function Navbar() {

@@ -171,9 +171,16 @@ export async function getProducts() {
     
     console.log('Shopify API Response:', JSON.stringify(response, null, 2));
 
+    // Check for GraphQL errors
+    if (response.errors) {
+      console.error('GraphQL Errors:', response.errors);
+      throw new Error(response.errors.message || 'GraphQL Error occurred');
+    }
+
+    // Check for valid response structure
     if (!response?.data?.products?.edges) {
-      console.error('Invalid response format:', response);
-      throw new Error('Invalid response format from Shopify');
+      console.error('Invalid response structure:', response);
+      throw new Error('Invalid response structure from Shopify');
     }
     
     const products = response.data.products.edges.map((edge: any) => {
@@ -194,14 +201,15 @@ export async function getProducts() {
           id: variant.node.id,
           title: variant.node.title,
           price: variant.node.price,
-          availableForSale: variant.node.availableForSale
+          availableForSale: variant.node.availableForSale,
+          compareAtPrice: variant.node.compareAtPrice
         }))
       };
     });
 
-    console.log(`Successfully fetched ${products.length} products`);
+    console.log(`Successfully fetched ${products.length} products:`, products);
     return products;
-  } catch (error) {
+  } catch (error: any) {
     console.error('Error fetching products:', error);
     throw error;
   }

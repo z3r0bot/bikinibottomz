@@ -6,10 +6,7 @@ import Image from 'next/image';
 import TrendingProducts from './components/TrendingProducts';
 import { getImagePath } from '../lib/utils';
 import { useEffect } from 'react';
-import { getProducts } from '../lib/shopify';
 import { useShopify } from './context/ShopifyContext';
-import ShopifyDebug from './components/ShopifyDebug';
-import ShopifyTest from './components/ShopifyTest';
 
 export default function Home() {
   const { products, isLoading, error } = useShopify();
@@ -29,7 +26,6 @@ export default function Home() {
 
   return (
     <div className="scroll-smooth">
-      <ShopifyDebug />
       {/* Hero Section with Three Images */}
       <div className="relative h-screen w-full flex">
         {/* First Hero Image (Left) */}
@@ -123,11 +119,6 @@ export default function Home() {
 
       {/* Trending Products Section */}
       <TrendingProducts />
-
-      {/* Debug Section */}
-      <div className="fixed bottom-4 right-4 z-50">
-        <ShopifyTest />
-      </div>
     </div>
   );
 } 
