@@ -45,7 +45,7 @@ export default function HomePage() {
                 <Link key={category.name} href={`/categories/${category.slug}`}>
                   <div className="aspect-square bg-primary-light rounded-lg p-6 flex flex-col items-center justify-center hover:scale-105 transition-transform">
                     <div className="w-28 h-28 mb-4 flex items-center justify-center">
-                      <img src={svgSrc} alt={`${category.name} tile`} className="w-full h-full object-contain" />
+                      <img src="/shell-logo.png" alt="Test" className="w-full h-full object-contain" />
                     </div>
                     <h3 className="text-xl font-semibold text-center">{category.name}</h3>
                   </div>
