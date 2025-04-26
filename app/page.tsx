@@ -12,7 +12,7 @@ export default function Home() {
   const categories = [
     { name: 'Fashion', href: '/categories/fashion' },
     { name: 'Beauty', href: '/categories/beauty' },
-    { name: 'Crystals', href: '/categories/crystals' },
+    { name: 'Accessories', href: '/categories/accessories' },
     { name: 'Summer', href: '/categories/summer' },
   ];
 
