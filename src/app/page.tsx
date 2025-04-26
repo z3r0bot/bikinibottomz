@@ -32,13 +32,26 @@ export default function HomePage() {
         <div className="container mx-auto">
           <h2 className="text-3xl font-bold text-center mb-12">Shop by Category</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-            {categories.map((category) => (
-              <Link key={category.name} href={`/categories/${category.slug}`}>
-                <div className="aspect-square bg-primary-light rounded-lg p-6 flex items-center justify-center hover:scale-105 transition-transform">
-                  <h3 className="text-xl font-semibold text-center">{category.name}</h3>
-                </div>
-              </Link>
-            ))}
+            {categories.map((category) => {
+              // Map category slug to SVG filename
+              const svgMap: Record<string, string> = {
+                fashion: '/images/categories/tiles/fashion-tile-simple-bell-dress.svg',
+                beauty: '/images/categories/tiles/beauty-tile.svg',
+                summer: '/images/categories/tiles/summer-tile.svg',
+                accessories: '/images/categories/tiles/accessories-tile.svg',
+              };
+              const svgSrc = svgMap[category.slug as keyof typeof svgMap] || '';
+              return (
+                <Link key={category.name} href={`/categories/${category.slug}`}>
+                  <div className="aspect-square bg-primary-light rounded-lg p-6 flex flex-col items-center justify-center hover:scale-105 transition-transform">
+                    <div className="w-28 h-28 mb-4 flex items-center justify-center">
+                      <img src={svgSrc} alt={`${category.name} tile`} className="w-full h-full object-contain" />
+                    </div>
+                    <h3 className="text-xl font-semibold text-center">{category.name}</h3>
+                  </div>
+                </Link>
+              );
+            })}
           </div>
         </div>
       </section>

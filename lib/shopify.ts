@@ -33,6 +33,7 @@ const PRODUCTS_QUERY = `
           handle
           productType
           availableForSale
+          tags
           priceRange {
             minVariantPrice {
               amount
@@ -202,7 +203,8 @@ export async function getProducts() {
           availableForSale: variant.availableForSale,
           compareAtPrice: variant.compareAtPrice,
           selectedOptions: variant.selectedOptions
-        }))
+        })),
+        tags: product.tags || [],
       };
     });
 

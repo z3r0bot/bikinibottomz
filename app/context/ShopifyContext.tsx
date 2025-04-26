@@ -13,6 +13,7 @@ export interface ShopifyProduct {
   availableForSale: boolean;
   images: ShopifyImage[];
   variants: ShopifyVariant[];
+  tags?: string[];
 }
 
 export interface ShopifyVariant {

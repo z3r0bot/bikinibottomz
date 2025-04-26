@@ -1,0 +1,48 @@
+<svg viewBox="0 0 280 280" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background -->
+  <rect width="280" height="280" fill="#f5f5f5"/>
+  
+  <!-- Sun -->
+  <circle cx="60" cy="60" r="30" fill="#ffeb3b"/>
+  <circle cx="60" cy="60" r="24" fill="#fdd835"/>
+  
+  <!-- Sun Rays -->
+  <path d="M60,20 L60,10" stroke="#ffeb3b" stroke-width="4" stroke-linecap="round"/>
+  <path d="M60,110 L60,100" stroke="#ffeb3b" stroke-width="4" stroke-linecap="round"/>
+  <path d="M20,60 L10,60" stroke="#ffeb3b" stroke-width="4" stroke-linecap="round"/>
+  <path d="M110,60 L100,60" stroke="#ffeb3b" stroke-width="4" stroke-linecap="round"/>
+  <path d="M33,33 L25,25" stroke="#ffeb3b" stroke-width="4" stroke-linecap="round"/>
+  <path d="M95,95 L87,87" stroke="#ffeb3b" stroke-width="4" stroke-linecap="round"/>
+  <path d="M33,87 L25,95" stroke="#ffeb3b" stroke-width="4" stroke-linecap="round"/>
+  <path d="M95,25 L87,33" stroke="#ffeb3b" stroke-width="4" stroke-linecap="round"/>
+  
+  <!-- Beach Towel -->
+  <rect x="70" y="120" width="180" height="90" rx="5" fill="#ff80ab"/>
+  <rect x="70" y="135" width="180" height="10" fill="#f50057" opacity="0.5"/>
+  <rect x="70" y="155" width="180" height="10" fill="#f50057" opacity="0.5"/>
+  <rect x="70" y="175" width="180" height="10" fill="#f50057" opacity="0.5"/>
+  <rect x="70" y="195" width="180" height="10" fill="#f50057" opacity="0.5"/>
+  
+  <!-- Sunglasses -->
+  <rect x="160" y="150" width="30" height="8" rx="4" fill="#333333"/>
+  <circle cx="155" cy="154" r="10" fill="#333333"/>
+  <circle cx="195" cy="154" r="10" fill="#333333"/>
+  <circle cx="155" cy="154" r="6" fill="#64b5f6" opacity="0.6"/>
+  <circle cx="195" cy="154" r="6" fill="#64b5f6" opacity="0.6"/>
+  
+  <!-- Flip Flops -->
+  <path d="M100,170 C110,165 120,165 130,170 C125,180 115,180 110,180 C105,180 95,180 90,170 C95,165 105,165 110,170" fill="#81d4fa"/>
+  <path d="M100,170 C110,165 120,165 130,170" stroke="#29b6f6" stroke-width="3" fill="none"/>
+  <path d="M110,170 L110,180" stroke="#29b6f6" stroke-width="3" fill="none"/>
+  
+  <!-- Palm Tree -->
+  <rect x="200" y="80" width="10" height="50" fill="#795548"/>
+  <path d="M205,80 C185,70 175,90 185,95" fill="#66bb6a"/>
+  <path d="M205,80 C225,70 235,90 225,95" fill="#66bb6a"/>
+  <path d="M205,70 C195,50 175,60 185,75" fill="#66bb6a"/>
+  <path d="M205,70 C215,50 235,60 225,75" fill="#66bb6a"/>
+  
+  <!-- Title -->
+  <rect x="40" y="230" width="200" height="40" rx="5" fill="#ffffff" opacity="0.8"/>
+  <text x="140" y="255" font-family="Arial, sans-serif" font-size="22" font-weight="bold" text-anchor="middle" fill="#333333">Summer</text>
+</svg>

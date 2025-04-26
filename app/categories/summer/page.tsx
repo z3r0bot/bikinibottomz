@@ -8,10 +8,11 @@ export default function SummerPage() {
 
   // Filter products for summer category by tag, type, or title
   const summerProducts = products.filter(product => {
-    // You can adjust this logic to match your data
+    const hasSummerTag = product.tags && product.tags.map(tag => tag.toLowerCase()).includes('summer');
     return (
       (product.product_type && product.product_type.toLowerCase().includes('summer')) ||
-      (product.title && product.title.toLowerCase().includes('summer'))
+      (product.title && product.title.toLowerCase().includes('summer')) ||
+      hasSummerTag
     );
   });
 

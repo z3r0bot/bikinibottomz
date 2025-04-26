@@ -1,0 +1,29 @@
+<svg viewBox="0 0 280 280" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background -->
+  <rect width="280" height="280" fill="#f5f5f5"/>
+  
+  <!-- Decorative Beach Elements -->
+  <path d="M0,280 L280,280 L280,230 C220,250 180,220 140,240 C100,260 60,230 0,250 Z" fill="#e6f7ff" opacity="0.6"/>
+  <path d="M0,280 L280,280 L280,240 C220,260 180,230 140,250 C100,270 60,240 0,260 Z" fill="#e6f7ff" opacity="0.8"/>
+  
+  <!-- Simple Bell Shaped Dress -->
+  <!-- Top/Bodice of Dress -->
+  <path d="M110,80 L170,80 L170,120 L110,120 Z" fill="#81d4fa"/>
+  
+  <!-- Bell Skirt of Dress -->
+  <path d="M110,120 L170,120 L190,200 L90,200 Z" fill="#81d4fa"/>
+  
+  <!-- Simple Straps -->
+  <rect x="120" y="60" width="8" height="20" fill="#81d4fa"/>
+  <rect x="152" y="60" width="8" height="20" fill="#81d4fa"/>
+  
+  <!-- Simple Neckline -->
+  <path d="M120,80 C130,75 150,75 160,80" stroke="#81d4fa" stroke-width="2" fill="none"/>
+  
+  <!-- Waistline -->
+  <line x1="110" y1="120" x2="170" y2="120" stroke="#5ab8eb" stroke-width="2"/>
+  
+  <!-- Title -->
+  <rect x="40" y="230" width="200" height="40" rx="5" fill="#ffffff" opacity="0.8"/>
+  <text x="140" y="255" font-family="Arial, sans-serif" font-size="22" font-weight="bold" text-anchor="middle" fill="#333333">Fashion</text>
+</svg>
