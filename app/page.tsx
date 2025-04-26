@@ -7,8 +7,10 @@ import TrendingProducts from './components/TrendingProducts';
 import { getImagePath } from '../lib/utils';
 import { useEffect } from 'react';
 import { getProducts } from '../lib/shopify';
+import { useShopify } from './context/ShopifyContext';
 
 export default function Home() {
+  const { products, isLoading, error } = useShopify();
   const categories = [
     { name: 'Fashion', href: '/categories/fashion' },
     { name: 'Beauty', href: '/categories/beauty' },
@@ -16,14 +18,12 @@ export default function Home() {
     { name: 'Summer', href: '/categories/summer' },
   ];
 
+  // Debug output
   useEffect(() => {
-    const testConnection = async () => {
-      const products = await getProducts();
-      console.log('Fetched products:', products);
-    };
-    
-    testConnection();
-  }, []);
+    console.log('Shopify Products:', products);
+    console.log('Loading:', isLoading);
+    console.log('Error:', error);
+  }, [products, isLoading, error]);
 
   return (
     <div className="scroll-smooth">

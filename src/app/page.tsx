@@ -70,5 +70,5 @@ const categories = [
   { name: 'Fashion', slug: 'fashion' },
   { name: 'Beauty', slug: 'beauty' },
   { name: 'Summer', slug: 'summer' },
-  { name: 'Crystals', slug: 'crystals' },
+  { name: 'Accessories', slug: 'accessories' },
 ]; 

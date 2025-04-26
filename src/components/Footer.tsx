@@ -14,7 +14,7 @@ export default function Footer() {
               <li><Link href="/categories/fashion" className="text-sm hover:text-accent-light">Fashion</Link></li>
               <li><Link href="/categories/beauty" className="text-sm hover:text-accent-light">Beauty</Link></li>
               <li><Link href="/categories/summer" className="text-sm hover:text-accent-light">Summer</Link></li>
-              <li><Link href="/categories/crystals" className="text-sm hover:text-accent-light">Crystals</Link></li>
+              <li><Link href="/categories/accessories" className="text-sm hover:text-accent-light">Accessories</Link></li>
             </ul>
           </div>
 

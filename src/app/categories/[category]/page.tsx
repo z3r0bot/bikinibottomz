@@ -9,7 +9,7 @@ export async function generateStaticParams() {
     { category: 'fashion' },
     { category: 'beauty' },
     { category: 'summer' },
-    { category: 'crystals' }
+    { category: 'accessories' }
   ];
 }
 

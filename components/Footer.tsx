@@ -39,8 +39,8 @@ export default function Footer() {
                 </Link>
               </li>
               <li>
-                <Link href="/categories/crystals" className="text-gray-600 hover:text-purple-600">
-                  Crystals
+                <Link href="/categories/accessories" className="text-gray-600 hover:text-purple-600">
+                  Accessories
                 </Link>
               </li>
             </ul>
