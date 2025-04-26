@@ -37,21 +37,18 @@ export default function HomePage() {
           <h2 className="text-3xl font-bold text-center mb-12">Shop by Category</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
             {categories.map((category) => {
-              // Map category slug to SVG filename
-              const svgMap: Record<string, React.FC<React.SVGProps<SVGSVGElement>>> = {
-                fashion: FashionTile,
-                beauty: BeautyTile,
-                summer: SummerTile,
-                accessories: AccessoriesTile,
+              // Map category slug to image filename
+              const imgMap: Record<string, string> = {
+                fashion: '/images/categories/tiles/fashion-tile.png',
+                beauty: '/images/categories/tiles/beauty-tile.png',
+                summer: '/images/categories/tiles/summer-tile.png',
+                accessories: '/images/categories/tiles/accessories-tile.png',
               };
               return (
                 <Link key={category.name} href={`/categories/${category.slug}`}>
                   <div className="aspect-square border-2 border-dashed border-orange-400 rounded-lg flex flex-col items-center justify-center hover:scale-105 transition-transform bg-white">
                     <div className="w-28 h-28 mb-4 flex items-center justify-center">
-                      {(() => {
-                        const SvgIcon = svgMap[category.slug];
-                        return SvgIcon ? <SvgIcon className="w-full h-full object-contain" /> : null;
-                      })()}
+                      <img src={imgMap[category.slug]} alt={`${category.name} tile`} className="w-full h-full object-contain" />
                     </div>
                     <h3 className="text-xl font-semibold text-center">{category.name}</h3>
                   </div>
