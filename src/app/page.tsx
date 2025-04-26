@@ -46,11 +46,12 @@ export default function HomePage() {
               };
               return (
                 <Link key={category.name} href={`/categories/${category.slug}`}>
-                  <div className="aspect-square border-2 border-dashed border-orange-400 rounded-lg flex flex-col items-center justify-center hover:scale-105 transition-transform bg-white">
-                    <div className="w-28 h-28 mb-4 flex items-center justify-center">
-                      <img src={imgMap[category.slug]} alt={`${category.name} tile`} className="w-full h-full object-contain" />
-                    </div>
-                    <h3 className="text-xl font-semibold text-center">{category.name}</h3>
+                  <div className="aspect-square border-2 border-dashed border-orange-400 rounded-lg overflow-hidden hover:scale-105 transition-transform bg-white flex items-center justify-center">
+                    <img 
+                      src={imgMap[category.slug]} 
+                      alt={`${category.name} tile`} 
+                      className="w-full h-full object-cover" 
+                    />
                   </div>
                 </Link>
               );
