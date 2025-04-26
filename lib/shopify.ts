@@ -22,17 +22,10 @@ const shopifyClient: any = isBuildTime
       apiVersion: '2024-07',
     });
 
-// Add debug logging
-console.log('Shopify Configuration:', {
-  storeDomain: process.env.NEXT_PUBLIC_SHOPIFY_STORE_DOMAIN,
-  hasToken: !!process.env.NEXT_PUBLIC_SHOPIFY_STOREFRONT_ACCESS_TOKEN,
-  isBuildTime,
-});
-
 // GraphQL queries
 const PRODUCTS_QUERY = `
   query Products {
-    products(first: 25, sortKey: CREATED_AT, reverse: true) {
+    products(first: 50, sortKey: CREATED_AT, reverse: true) {
       edges {
         node {
           id
@@ -41,6 +34,12 @@ const PRODUCTS_QUERY = `
           handle
           productType
           availableForSale
+          priceRange {
+            minVariantPrice {
+              amount
+              currencyCode
+            }
+          }
           images(first: 10) {
             edges {
               node {
@@ -63,6 +62,10 @@ const PRODUCTS_QUERY = `
                 compareAtPrice {
                   amount
                   currencyCode
+                }
+                selectedOptions {
+                  name
+                  value
                 }
               }
             }
@@ -154,32 +157,22 @@ export {
 export async function getProducts() {
   try {
     if (isBuildTime) {
-      console.log('Build time detected, returning empty products array');
       return [];
     }
     
-    if (!process.env.NEXT_PUBLIC_SHOPIFY_STOREFRONT_ACCESS_TOKEN) {
-      throw new Error('Shopify Storefront Access Token is missing');
-    }
-
-    if (!process.env.NEXT_PUBLIC_SHOPIFY_STORE_DOMAIN) {
-      throw new Error('Shopify Store Domain is missing');
+    if (!process.env.NEXT_PUBLIC_SHOPIFY_STOREFRONT_ACCESS_TOKEN || !process.env.NEXT_PUBLIC_SHOPIFY_STORE_DOMAIN) {
+      throw new Error('Missing Shopify configuration');
     }
     
-    console.log('Attempting to fetch products from Shopify...');
     const response = await shopifyClient.request(PRODUCTS_QUERY);
-    
-    console.log('Shopify API Response:', JSON.stringify(response, null, 2));
 
     // Check for GraphQL errors
     if (response.errors) {
-      console.error('GraphQL Errors:', response.errors);
-      throw new Error(response.errors.message || 'GraphQL Error occurred');
+      throw new Error(response.errors[0]?.message || 'GraphQL Error occurred');
     }
 
     // Check for valid response structure
     if (!response?.data?.products?.edges) {
-      console.error('Invalid response structure:', response);
       throw new Error('Invalid response structure from Shopify');
     }
     
@@ -202,15 +195,15 @@ export async function getProducts() {
           title: variant.node.title,
           price: variant.node.price,
           availableForSale: variant.node.availableForSale,
-          compareAtPrice: variant.node.compareAtPrice
+          compareAtPrice: variant.node.compareAtPrice,
+          selectedOptions: variant.node.selectedOptions
         }))
       };
     });
 
-    console.log(`Successfully fetched ${products.length} products:`, products);
     return products;
   } catch (error: any) {
-    console.error('Error fetching products:', error);
+    console.error('Error fetching products:', error.message);
     throw error;
   }
 }
