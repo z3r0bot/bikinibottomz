@@ -11,6 +11,8 @@ interface ProductGridProps {
 export default function ProductGrid({ products }: ProductGridProps) {
   const router = useRouter();
 
+  console.log("Rendering products:", products);
+
   if (products.length === 0) {
     return (
       <div className="text-center py-12">

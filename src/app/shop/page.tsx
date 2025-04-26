@@ -16,40 +16,18 @@ export default function ShopPage() {
     return <div className="text-center p-8 text-red-500">Error loading products: {error}</div>;
   }
 
+  // Debug log before rendering
+  console.log("Rendering products on shop page:", products);
+
+  // Render all products directly for debugging
   return (
     <div className="container mx-auto px-4 py-8">
-      <h1 className="text-3xl font-bold mb-8">Shop</h1>
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-        {products?.map((product) => (
-          <div key={product.id} className="bg-white rounded-lg shadow-md overflow-hidden">
-            {product.images[0] && (
-              <div className="relative h-64">
-                <Image
-                  src={product.images[0].src}
-                  alt={product.title}
-                  fill
-                  className="object-cover"
-                />
-              </div>
-            )}
-            <div className="p-4">
-              <div className="flex flex-col gap-2">
-                <h3 className="text-lg font-semibold line-clamp-1">{product.title}</h3>
-                <p className="text-sm text-gray-600 line-clamp-2">{product.description}</p>
-                <p className="text-sm text-gray-500 italic">Type: {product.product_type || 'N/A'}</p>
-              </div>
-              <div className="flex justify-between items-center">
-                <span className="text-lg font-bold">
-                  ${parseFloat(product.variants[0]?.price?.amount || '0').toFixed(2)}
-                </span>
-                <button
-                  onClick={() => addToCart(product)}
-                  className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition-colors"
-                >
-                  Add to Cart
-                </button>
-              </div>
-            </div>
+      <h1 className="text-4xl font-dancing font-bold text-center mb-8">Our Products</h1>
+      <div>
+        {products.map(product => (
+          <div key={product.id}>
+            <h2>{product.title}</h2>
+            {/* Add more product details here if needed */}
           </div>
         ))}
       </div>

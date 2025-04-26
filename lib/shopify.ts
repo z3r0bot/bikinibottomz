@@ -3,29 +3,28 @@ import { createStorefrontApiClient } from '@shopify/storefront-api-client';
 // Check if we're in a build environment
 const isBuildTime = process.env.NODE_ENV === 'production' && !process.env.NEXT_PUBLIC_SHOPIFY_STOREFRONT_ACCESS_TOKEN;
 
-// Define types for our mock client
-type MockShopifyClient = {
-  query: (query: string, variables?: any) => Promise<any>;
-  request: (query: string, variables?: any) => Promise<any>;
-};
+interface ShopifyResponse {
+  data?: {
+    products?: {
+      edges: any[];
+    };
+  };
+  errors?: Array<{ message: string }>;
+}
 
-// Create the Shopify client with fallback values
-const shopifyClient: any = isBuildTime 
-  ? {
-      // Mock client for build time
-      query: async (query: string, variables?: any) => ({ data: { products: { edges: [] } } }),
-      request: async (query: string, variables?: any) => ({ data: { products: { edges: [] } } }),
-    }
-  : createStorefrontApiClient({
+// Create the Shopify client
+const shopifyClient = !isBuildTime
+  ? createStorefrontApiClient({
       storeDomain: process.env.NEXT_PUBLIC_SHOPIFY_STORE_DOMAIN as string,
       publicAccessToken: process.env.NEXT_PUBLIC_SHOPIFY_STOREFRONT_ACCESS_TOKEN as string,
-      apiVersion: '2024-07',
-    });
+      apiVersion: '2024-01',
+    })
+  : null;
 
 // GraphQL queries
 const PRODUCTS_QUERY = `
   query Products {
-    products(first: 50, sortKey: CREATED_AT, reverse: true) {
+    products(first: 250) {
       edges {
         node {
           id
@@ -156,28 +155,34 @@ export {
 // Function to fetch products from Shopify
 export async function getProducts() {
   try {
-    if (isBuildTime) {
+    if (!shopifyClient) {
+      console.log('Shopify client not available, returning empty products array');
       return [];
     }
     
     if (!process.env.NEXT_PUBLIC_SHOPIFY_STOREFRONT_ACCESS_TOKEN || !process.env.NEXT_PUBLIC_SHOPIFY_STORE_DOMAIN) {
+      console.error('Missing Shopify configuration');
       throw new Error('Missing Shopify configuration');
     }
     
-    const response = await shopifyClient.request(PRODUCTS_QUERY);
+    console.log('Fetching products from Shopify...');
+    const response: any = await shopifyClient.request(PRODUCTS_QUERY);
+    console.log('Raw Shopify response:', JSON.stringify(response, null, 2));
 
     // Check for GraphQL errors
-    if (response.errors) {
+    if (Array.isArray(response.errors) && response.errors.length > 0) {
+      console.error('GraphQL Errors:', response.errors);
       throw new Error(response.errors[0]?.message || 'GraphQL Error occurred');
     }
 
     // Check for valid response structure
     if (!response?.data?.products?.edges) {
+      console.error('Invalid response structure:', response);
       throw new Error('Invalid response structure from Shopify');
     }
     
-    const products = response.data.products.edges.map((edge: any) => {
-      const product = edge.node;
+    const products = response.data.products.edges.map(({ node }: any) => {
+      const product = node;
       return {
         id: product.id,
         title: product.title,
@@ -185,25 +190,26 @@ export async function getProducts() {
         handle: product.handle,
         product_type: product.productType,
         availableForSale: product.availableForSale,
-        images: product.images.edges.map((img: any) => ({
-          id: img.node.id,
-          src: img.node.url,
-          alt: img.node.altText
+        images: product.images.edges.map(({ node: img }: any) => ({
+          id: img.id,
+          src: img.url,
+          alt: img.altText
         })),
-        variants: product.variants.edges.map((variant: any) => ({
-          id: variant.node.id,
-          title: variant.node.title,
-          price: variant.node.price,
-          availableForSale: variant.node.availableForSale,
-          compareAtPrice: variant.node.compareAtPrice,
-          selectedOptions: variant.node.selectedOptions
+        variants: product.variants.edges.map(({ node: variant }: any) => ({
+          id: variant.id,
+          title: variant.title,
+          price: variant.price,
+          availableForSale: variant.availableForSale,
+          compareAtPrice: variant.compareAtPrice,
+          selectedOptions: variant.selectedOptions
         }))
       };
     });
 
+    console.log(`Successfully fetched ${products.length} products`);
     return products;
-  } catch (error: any) {
-    console.error('Error fetching products:', error.message);
+  } catch (error) {
+    console.error('Error fetching products:', error);
     throw error;
   }
 }
@@ -211,9 +217,8 @@ export async function getProducts() {
 // Function to fetch collections from Shopify
 export async function getCollections() {
   try {
-    // If we're in build time and don't have a token, return empty data
-    if (isBuildTime) {
-      console.log('Build time detected, returning empty collections array');
+    if (isBuildTime || !shopifyClient) {
+      console.log('Build time or missing client, returning empty collections array');
       return [];
     }
 
@@ -244,14 +249,11 @@ export async function getCollections() {
 // Function to fetch a product by handle
 export async function getProductByHandle(handle: string) {
   try {
-    // If we're in build time and don't have a token, return empty data
-    if (isBuildTime) {
+    if (isBuildTime || !shopifyClient) {
       return null;
     }
     
-    const response = await shopifyClient.request(PRODUCT_BY_HANDLE_QUERY, {
-      handle,
-    });
+    const response = await shopifyClient.request(PRODUCT_BY_HANDLE_QUERY, { handle } as any);
     return response.data.product;
   } catch (error) {
     console.error(`Error fetching product with handle ${handle}:`, error);
@@ -262,8 +264,7 @@ export async function getProductByHandle(handle: string) {
 // Function to create a checkout session
 export async function createCheckout(variantId: string, quantity: number = 1) {
   try {
-    // If we're in build time and don't have a token, return empty data
-    if (isBuildTime) {
+    if (isBuildTime || !shopifyClient) {
       return null;
     }
     
@@ -276,7 +277,7 @@ export async function createCheckout(variantId: string, quantity: number = 1) {
           },
         ],
       },
-    });
+    } as any);
     return response.data.checkoutCreate.checkout;
   } catch (error) {
     console.error('Error creating checkout:', error);

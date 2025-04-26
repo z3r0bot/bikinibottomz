@@ -72,6 +72,7 @@ export function ShopifyProvider({ children }: { children: ReactNode }) {
       setIsLoading(true);
       setError(null); // Clear any previous errors
       const fetchedProducts = await getProducts();
+      console.log("Shopify API products:", fetchedProducts);
       setProducts(fetchedProducts);
     } catch (err: any) {
       const errorMessage = err?.message || 'Failed to fetch products';
