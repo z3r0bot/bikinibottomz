@@ -111,4 +111,50 @@ The project is configured for deployment on AWS Amplify:
 
 ## License
 
-This project is licensed under the MIT License - see the LICENSE file for details. 
+This project is licensed under the MIT License - see the LICENSE file for details.
+
+## Environment Variables
+
+To run this application locally, you need to set up the following environment variables:
+
+1. Create a `.env.local` file in the root directory with the following content:
+
+```
+# Shopify Storefront API
+NEXT_PUBLIC_SHOPIFY_STORE_DOMAIN=your-store.myshopify.com
+NEXT_PUBLIC_SHOPIFY_STOREFRONT_ACCESS_TOKEN=your-storefront-access-token
+```
+
+2. Replace `your-store.myshopify.com` with your actual Shopify store domain
+3. Replace `your-storefront-access-token` with your actual Storefront API access token
+
+## GitHub Actions Setup
+
+For the GitHub Actions workflow to work correctly, you need to set up the following secrets in your GitHub repository:
+
+1. Go to your GitHub repository
+2. Click on "Settings" > "Secrets and variables" > "Actions"
+3. Click on "New repository secret"
+4. Add the following secrets:
+   - `NEXT_PUBLIC_SHOPIFY_STORE_DOMAIN`: Your Shopify store domain (e.g., your-store.myshopify.com)
+   - `NEXT_PUBLIC_SHOPIFY_STOREFRONT_ACCESS_TOKEN`: Your Shopify Storefront API access token
+
+## Development
+
+```bash
+# Install dependencies
+npm install
+
+# Run the development server
+npm run dev
+```
+
+## Build
+
+```bash
+# Build the application
+npm run build
+
+# Start the production server
+npm start
+``` 

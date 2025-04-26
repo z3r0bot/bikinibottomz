@@ -5,6 +5,8 @@ import Link from 'next/link';
 import Image from 'next/image';
 import TrendingProducts from './components/TrendingProducts';
 import { getImagePath } from '../lib/utils';
+import { useEffect } from 'react';
+import { getProducts } from '../lib/shopify';
 
 export default function Home() {
   const categories = [
@@ -14,17 +16,26 @@ export default function Home() {
     { name: 'Summer', href: '/categories/summer' },
   ];
 
+  useEffect(() => {
+    const testConnection = async () => {
+      const products = await getProducts();
+      console.log('Fetched products:', products);
+    };
+    
+    testConnection();
+  }, []);
+
   return (
     <div className="scroll-smooth">
       {/* Hero Section with Three Images */}
       <div className="relative h-screen w-full flex">
         {/* First Hero Image */}
-        <div className="flex-1 relative">
+        <div className="flex-1 relative hero-image-container">
           <Image
             src={getImagePath('/images/hero/hero1.png')}
             alt="Hero 1"
             fill
-            className="object-cover vintage-filter reduce-blur"
+            className="object-cover vintage-filter"
             priority
             sizes="33vw"
           />
@@ -34,12 +45,12 @@ export default function Home() {
         <div className="w-[2px] bg-gradient-to-b from-[#ff7400]/50 via-[#ffa242]/50 to-[#ff7400]/50 z-10" />
 
         {/* Second Hero Image */}
-        <div className="flex-1 relative">
+        <div className="flex-1 relative hero-image-container">
           <Image
             src={getImagePath('/images/hero/hero2.png')}
             alt="Hero 2"
             fill
-            className="object-cover vintage-filter reduce-blur"
+            className="object-cover vintage-filter"
             priority
             sizes="33vw"
           />
@@ -49,34 +60,34 @@ export default function Home() {
         <div className="w-[2px] bg-gradient-to-b from-[#ff7400]/50 via-[#ffa242]/50 to-[#ff7400]/50 z-10" />
 
         {/* Third Hero Image */}
-        <div className="flex-1 relative">
+        <div className="flex-1 relative hero-image-container">
           <Image
             src={getImagePath('/images/hero/hero3.png')}
             alt="Hero 3"
             fill
-            className="object-cover vintage-filter reduce-blur"
+            className="object-cover vintage-filter"
             priority
             sizes="33vw"
           />
         </div>
 
         {/* Centered Text Overlay */}
-        <div className="absolute inset-0 flex items-center justify-center text-center">
+        <div className="absolute inset-0 flex items-center justify-center text-center bg-black/30">
           <div className="px-4">
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8 }}
             >
-              <h1 className="text-5xl md:text-7xl font-bold text-white mb-6 font-dancing drop-shadow-lg">
+              <h1 className="text-5xl md:text-7xl font-bold text-white mb-6 font-dancing drop-shadow-lg tracking-wider">
                 Bikini Bottoms
               </h1>
-              <p className="text-xl md:text-2xl text-white mb-8 max-w-2xl mx-auto drop-shadow font-raleway">
+              <p className="text-xl md:text-2xl text-white mb-8 max-w-2xl mx-auto drop-shadow-lg font-raleway">
                 Your premier destination for beachwear and accessories
               </p>
               <a
                 href="#categories"
-                className="inline-block px-8 py-3 bg-gradient-to-r from-[#ff7400] to-[#ffa242] text-white rounded-md hover:from-[#ff7400] hover:to-[#ff7400] transition-all duration-200 text-lg font-medium hover:scale-105 transform"
+                className="inline-block px-8 py-3 bg-gradient-to-r from-[#ff7400] to-[#ffa242] text-white rounded-md hover:from-[#ff7400] hover:to-[#ff7400] transition-all duration-200 text-lg font-medium hover:scale-105 transform shadow-lg"
               >
                 Shop Now
               </a>

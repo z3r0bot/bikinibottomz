@@ -16,7 +16,10 @@ export interface ShopifyProduct {
 
 export interface ShopifyVariant {
   id: string;
-  price: string;
+  price: {
+    amount: string;
+    currencyCode: string;
+  };
   title: string;
 }
 
@@ -65,12 +68,14 @@ export function ShopifyProvider({ children }: { children: ReactNode }) {
   const refreshProducts = async () => {
     try {
       setIsLoading(true);
+      setError(null); // Clear any previous errors
       const fetchedProducts = await getProducts();
       setProducts(fetchedProducts);
-      setError(null);
-    } catch (err) {
-      setError('Failed to fetch products');
-      console.error(err);
+    } catch (err: any) {
+      const errorMessage = err?.message || 'Failed to fetch products';
+      console.error('Product fetch error:', errorMessage);
+      setError(errorMessage);
+      setProducts([]); // Reset products on error
     } finally {
       setIsLoading(false);
     }
@@ -80,12 +85,14 @@ export function ShopifyProvider({ children }: { children: ReactNode }) {
   const refreshCollections = async () => {
     try {
       setIsLoading(true);
+      setError(null); // Clear any previous errors
       const fetchedCollections = await getCollections();
       setCollections(fetchedCollections);
-      setError(null);
-    } catch (err) {
-      setError('Failed to fetch collections');
-      console.error(err);
+    } catch (err: any) {
+      const errorMessage = err?.message || 'Failed to fetch collections';
+      console.error('Collections fetch error:', errorMessage);
+      setError(errorMessage);
+      setCollections([]); // Reset collections on error
     } finally {
       setIsLoading(false);
     }
@@ -94,6 +101,12 @@ export function ShopifyProvider({ children }: { children: ReactNode }) {
   // Fetch data on initial load
   useEffect(() => {
     const fetchData = async () => {
+      if (!process.env.NEXT_PUBLIC_SHOPIFY_STORE_DOMAIN || !process.env.NEXT_PUBLIC_SHOPIFY_STOREFRONT_ACCESS_TOKEN) {
+        setError('Shopify configuration is missing. Please check your environment variables.');
+        setIsLoading(false);
+        return;
+      }
+
       await Promise.all([refreshProducts(), refreshCollections()]);
     };
     

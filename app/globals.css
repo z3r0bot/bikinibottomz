@@ -65,11 +65,48 @@ body {
 
 /* Vintage image filter */
 .vintage-filter {
-  filter: sepia(30%) contrast(110%) brightness(90%) saturate(130%);
+  filter: brightness(0.85) contrast(1.2) saturate(0.85) sepia(0.15);
+  transition: filter 0.3s ease;
+}
+
+.vintage-filter:hover {
+  filter: brightness(0.9) contrast(1.1) saturate(0.9) sepia(0.1);
+}
+
+/* Dark overlay for hero images */
+.hero-image-container {
+  position: relative;
+}
+
+.hero-image-container::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.2);
+  pointer-events: none;
 }
 
 /* Reduce blurriness */
 .reduce-blur {
   image-rendering: -webkit-optimize-contrast;
   image-rendering: crisp-edges;
+}
+
+/* Add text shadow for better visibility */
+.drop-shadow-lg {
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+/* Ensure fonts are loaded with correct weights */
+@layer base {
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-dancing;
+  }
+  
+  body {
+    @apply font-raleway;
+  }
 } 

@@ -22,6 +22,13 @@ const shopifyClient: any = isBuildTime
       apiVersion: '2024-07',
     });
 
+// Add debug logging
+console.log('Shopify Configuration:', {
+  storeDomain: process.env.NEXT_PUBLIC_SHOPIFY_STORE_DOMAIN,
+  hasToken: !!process.env.NEXT_PUBLIC_SHOPIFY_STOREFRONT_ACCESS_TOKEN,
+  isBuildTime,
+});
+
 // GraphQL queries
 const PRODUCTS_QUERY = `
   query Products {
@@ -108,11 +115,32 @@ const CREATE_CHECKOUT_MUTATION = `
   }
 `;
 
+const COLLECTIONS_QUERY = `
+  query Collections {
+    collections(first: 10) {
+      edges {
+        node {
+          id
+          title
+          handle
+          description
+          image {
+            id
+            url
+            altText
+          }
+        }
+      }
+    }
+  }
+`;
+
 export {
   shopifyClient,
   PRODUCTS_QUERY,
   PRODUCT_BY_HANDLE_QUERY,
   CREATE_CHECKOUT_MUTATION,
+  COLLECTIONS_QUERY,
 };
 
 // Function to fetch products from Shopify
@@ -120,39 +148,64 @@ export async function getProducts() {
   try {
     // If we're in build time and don't have a token, return empty data
     if (isBuildTime) {
+      console.log('Build time detected, returning empty products array');
       return [];
     }
     
+    if (!process.env.NEXT_PUBLIC_SHOPIFY_STOREFRONT_ACCESS_TOKEN) {
+      throw new Error('Shopify Storefront Access Token is missing');
+    }
+
+    if (!process.env.NEXT_PUBLIC_SHOPIFY_STORE_DOMAIN) {
+      throw new Error('Shopify Store Domain is missing');
+    }
+    
+    console.log('Attempting to fetch products from Shopify...');
     const response = await shopifyClient.request(PRODUCTS_QUERY);
-    return response.data.products.edges.map((edge: any) => edge.node);
+    
+    if (!response?.data?.products?.edges) {
+      throw new Error('Invalid response format from Shopify');
+    }
+    
+    const products = response.data.products.edges.map((edge: any) => edge.node);
+    console.log(`Successfully fetched ${products.length} products`);
+    return products;
   } catch (error) {
     console.error('Error fetching products:', error);
-    return [];
+    throw error; // Re-throw to be handled by the context
   }
 }
 
 // Function to fetch collections from Shopify
 export async function getCollections() {
   try {
-    const response = await fetch(
-      `https://${process.env.SHOPIFY_SHOP_NAME}.myshopify.com/admin/api/2023-10/custom_collections.json`,
-      {
-        headers: {
-          'X-Shopify-Access-Token': process.env.SHOPIFY_ACCESS_TOKEN || '',
-          'Content-Type': 'application/json',
-        },
-      }
-    );
-    
-    if (!response.ok) {
-      throw new Error(`Shopify API error: ${response.statusText}`);
+    // If we're in build time and don't have a token, return empty data
+    if (isBuildTime) {
+      console.log('Build time detected, returning empty collections array');
+      return [];
     }
-    
-    const data = await response.json();
-    return data.custom_collections;
+
+    if (!process.env.NEXT_PUBLIC_SHOPIFY_STOREFRONT_ACCESS_TOKEN) {
+      throw new Error('Shopify Storefront Access Token is missing');
+    }
+
+    if (!process.env.NEXT_PUBLIC_SHOPIFY_STORE_DOMAIN) {
+      throw new Error('Shopify Store Domain is missing');
+    }
+
+    console.log('Attempting to fetch collections from Shopify...');
+    const response = await shopifyClient.request(COLLECTIONS_QUERY);
+
+    if (!response?.data?.collections?.edges) {
+      throw new Error('Invalid response format from Shopify');
+    }
+
+    const collections = response.data.collections.edges.map((edge: any) => edge.node);
+    console.log(`Successfully fetched ${collections.length} collections`);
+    return collections;
   } catch (error) {
-    console.error('Error fetching collections from Shopify:', error);
-    return [];
+    console.error('Error fetching collections:', error);
+    throw error; // Re-throw to be handled by the context
   }
 }
 
