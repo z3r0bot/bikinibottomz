@@ -10,6 +10,7 @@ export interface ShopifyProduct {
   handle: string;
   description: string;
   product_type: string;
+  availableForSale: boolean;
   images: ShopifyImage[];
   variants: ShopifyVariant[];
 }
@@ -21,6 +22,7 @@ export interface ShopifyVariant {
     currencyCode: string;
   };
   title: string;
+  availableForSale: boolean;
 }
 
 export interface ShopifyImage {

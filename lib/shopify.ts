@@ -17,8 +17,8 @@ const shopifyClient: any = isBuildTime
       request: async (query: string, variables?: any) => ({ data: { products: { edges: [] } } }),
     }
   : createStorefrontApiClient({
-      storeDomain: process.env.NEXT_PUBLIC_SHOPIFY_STORE_DOMAIN || 'eswivu-v8.myshopify.com',
-      publicAccessToken: process.env.NEXT_PUBLIC_SHOPIFY_STOREFRONT_ACCESS_TOKEN || 'dummy-token-for-build',
+      storeDomain: process.env.NEXT_PUBLIC_SHOPIFY_STORE_DOMAIN as string,
+      publicAccessToken: process.env.NEXT_PUBLIC_SHOPIFY_STOREFRONT_ACCESS_TOKEN as string,
       apiVersion: '2024-07',
     });
 
@@ -32,7 +32,7 @@ console.log('Shopify Configuration:', {
 // GraphQL queries
 const PRODUCTS_QUERY = `
   query Products {
-    products(first: 10) {
+    products(first: 250) {
       edges {
         node {
           id
@@ -40,7 +40,8 @@ const PRODUCTS_QUERY = `
           description
           handle
           productType
-          images(first: 1) {
+          availableForSale
+          images(first: 10) {
             edges {
               node {
                 id
@@ -49,15 +50,20 @@ const PRODUCTS_QUERY = `
               }
             }
           }
-          variants(first: 1) {
+          variants(first: 10) {
             edges {
               node {
                 id
+                title
+                availableForSale
                 price {
                   amount
                   currencyCode
                 }
-                title
+                compareAtPrice {
+                  amount
+                  currencyCode
+                }
               }
             }
           }
@@ -147,7 +153,6 @@ export {
 // Function to fetch products from Shopify
 export async function getProducts() {
   try {
-    // If we're in build time and don't have a token, return empty data
     if (isBuildTime) {
       console.log('Build time detected, returning empty products array');
       return [];
@@ -164,16 +169,41 @@ export async function getProducts() {
     console.log('Attempting to fetch products from Shopify...');
     const response = await shopifyClient.request(PRODUCTS_QUERY);
     
+    console.log('Shopify API Response:', JSON.stringify(response, null, 2));
+
     if (!response?.data?.products?.edges) {
+      console.error('Invalid response format:', response);
       throw new Error('Invalid response format from Shopify');
     }
     
-    const products = response.data.products.edges.map((edge: any) => edge.node);
+    const products = response.data.products.edges.map((edge: any) => {
+      const product = edge.node;
+      return {
+        id: product.id,
+        title: product.title,
+        description: product.description,
+        handle: product.handle,
+        product_type: product.productType,
+        availableForSale: product.availableForSale,
+        images: product.images.edges.map((img: any) => ({
+          id: img.node.id,
+          src: img.node.url,
+          alt: img.node.altText
+        })),
+        variants: product.variants.edges.map((variant: any) => ({
+          id: variant.node.id,
+          title: variant.node.title,
+          price: variant.node.price,
+          availableForSale: variant.node.availableForSale
+        }))
+      };
+    });
+
     console.log(`Successfully fetched ${products.length} products`);
     return products;
   } catch (error) {
     console.error('Error fetching products:', error);
-    throw error; // Re-throw to be handled by the context
+    throw error;
   }
 }
 
