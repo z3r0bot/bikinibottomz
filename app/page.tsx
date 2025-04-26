@@ -27,32 +27,17 @@ export default function Home() {
 
   return (
     <div className="scroll-smooth">
-      {/* Hero Section with Three Images */}
+      {/* Hero Section with Two Images */}
       <div className="relative h-screen w-full flex">
-        {/* First Hero Image */}
+        {/* Second Hero Image (Middle) */}
         <div className="flex-1 relative hero-image-container">
           <Image
-            src={getImagePath('/images/hero/hero1.png')}
-            alt="Hero 1"
-            fill
-            className="object-cover vintage-filter"
-            priority
-            sizes="33vw"
-          />
-        </div>
-
-        {/* Orange Divider */}
-        <div className="w-[2px] bg-gradient-to-b from-[#ff7400]/50 via-[#ffa242]/50 to-[#ff7400]/50 z-10" />
-
-        {/* Second Hero Image */}
-        <div className="flex-1 relative hero-image-container">
-          <Image
-            src={getImagePath('/images/hero/hero2.png')}
+            src={getImagePath('/images/hero/hero2.jpg')}
             alt="Hero 2"
             fill
-            className="object-cover vintage-filter"
+            className="object-cover"
             priority
-            sizes="33vw"
+            sizes="50vw"
           />
         </div>
 
@@ -62,12 +47,12 @@ export default function Home() {
         {/* Third Hero Image */}
         <div className="flex-1 relative hero-image-container">
           <Image
-            src={getImagePath('/images/hero/hero3.png')}
+            src={getImagePath('/images/hero/hero3.jpg')}
             alt="Hero 3"
             fill
-            className="object-cover vintage-filter"
+            className="object-cover"
             priority
-            sizes="33vw"
+            sizes="50vw"
           />
         </div>
 

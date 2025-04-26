@@ -20,8 +20,8 @@ export default function Navigation() {
           <Link href="/categories/summer" className="hover:text-accent-light transition-colors">
             Summer
           </Link>
-          <Link href="/categories/crystals" className="hover:text-accent-light transition-colors">
-            Crystals
+          <Link href="/categories/accessories" className="hover:text-accent-light transition-colors">
+            Accessories
           </Link>
           <Cart />
         </div>
