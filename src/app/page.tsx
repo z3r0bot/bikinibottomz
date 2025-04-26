@@ -39,7 +39,7 @@ export default function HomePage() {
             {categories.map((category) => {
               // Map category slug to image filename
               const imgMap: Record<string, string> = {
-                fashion: '/images/categories/tiles/fashion-tile.png',
+                fashion: '/images/categories/tiles/fashion-tile-simple-bell-dress.png',
                 beauty: '/images/categories/tiles/beauty-tile.png',
                 summer: '/images/categories/tiles/summer-tile.png',
                 accessories: '/images/categories/tiles/accessories-tile.png',
