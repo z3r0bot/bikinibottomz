@@ -14,9 +14,7 @@ export default function ShopifyDebug() {
       products: products?.map(p => ({
         id: p.id,
         title: p.title,
-        status: p.status,
         availableForSale: p.availableForSale,
-        totalInventory: p.totalInventory,
         imagesCount: p.images?.length || 0,
         variantsCount: p.variants?.length || 0
       })),
@@ -36,9 +34,7 @@ export default function ShopifyDebug() {
           products: products?.map(p => ({
             id: p.id,
             title: p.title,
-            status: p.status,
             availableForSale: p.availableForSale,
-            totalInventory: p.totalInventory,
             imagesCount: p.images?.length || 0,
             variantsCount: p.variants?.length || 0
           })),
