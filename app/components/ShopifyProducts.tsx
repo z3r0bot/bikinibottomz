@@ -89,7 +89,7 @@ export default function ShopifyProducts() {
                 <div className="mt-4 text-center">
                   <h3 className="text-lg font-raleway font-medium text-gray-900">{product.title}</h3>
                   <p className="mt-1 text-lg font-raleway text-[#ff7400]">
-                    ${product.variants[0]?.price || 'N/A'}
+                    ${parseFloat(product.variants[0]?.price?.amount || '0').toFixed(2)}
                   </p>
                 </div>
               </Link>
