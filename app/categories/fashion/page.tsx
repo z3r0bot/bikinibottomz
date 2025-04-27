@@ -1,12 +1,10 @@
-import { getProducts, getCollections } from '../../../lib/shopify';
+import { getProducts } from '../../../lib/shopify';
 import Image from 'next/image';
 import Link from 'next/link';
 
 export default async function FashionPage() {
   const products = await getProducts();
-  const collections = await getCollections();
-  const dressesCollection = collections.find((col: any) => col.handle === 'dresses');
-  const dresses = dressesCollection?.products || [];
+  const dresses = products.filter((product: any) => (product.product_type || '').toLowerCase() === 'dresses');
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
