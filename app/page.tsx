@@ -24,6 +24,13 @@ export default function Home() {
     { name: 'Summer', href: '/categories/summer' },
   ];
 
+  const categoryImages: Record<string, string> = {
+    Fashion: '/images/categories/tiles/fashion-tile-simple-bell-dress.png',
+    Beauty: '/images/categories/tiles/beauty-tile.png',
+    Accessories: '/images/categories/tiles/accessories-tile.png',
+    Summer: '/images/categories/tiles/summer-tile.png',
+  };
+
   // Debug output
   useEffect(() => {
     console.log('Shopify Products:', products);
@@ -115,7 +122,7 @@ export default function Home() {
               >
                 <div className="aspect-square rounded-lg overflow-hidden relative">
                   <Image
-                    src={`/images/categories/tiles/${category.name.toLowerCase()}-tile.png`}
+                    src={categoryImages[category.name]}
                     alt={`${category.name} category`}
                     fill
                     className="object-cover transition-transform duration-300 group-hover:scale-105"
