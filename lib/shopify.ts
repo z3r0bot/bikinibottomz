@@ -254,7 +254,9 @@ export async function getProductByHandle(handle: string) {
     if (isBuildTime || !shopifyClient) {
       return null;
     }
+    console.log('Fetching product by handle:', handle);
     const response = await shopifyClient.request(PRODUCT_BY_HANDLE_QUERY, { handle } as any);
+    console.log('Product by handle response:', JSON.stringify(response, null, 2));
     const product = response.data.product;
     if (!product) return null;
     return {
