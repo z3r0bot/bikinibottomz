@@ -3,11 +3,34 @@
 import { useCart } from '../context/CartContext';
 import Image from 'next/image';
 import Link from 'next/link';
+import { useState } from 'react';
 
 export default function CartPage() {
   const { cart, updateQuantity, removeFromCart, clearCart } = useCart();
+  const [showCheckout, setShowCheckout] = useState(false);
+  const [checkoutData, setCheckoutData] = useState({
+    email: '',
+    name: '',
+    address: '',
+    city: '',
+    state: '',
+    zip: '',
+    country: '',
+    phone: '',
+  });
+  const [submitted, setSubmitted] = useState(false);
 
   const total = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setCheckoutData({ ...checkoutData, [e.target.name]: e.target.value });
+  };
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    setSubmitted(true);
+    clearCart();
+  };
 
   return (
     <div className="max-w-3xl mx-auto px-4 py-12">
@@ -37,7 +60,39 @@ export default function CartPage() {
             <button onClick={clearCart} className="text-sm text-gray-500 underline">Clear Cart</button>
             <div className="text-2xl font-bold">Total: ${total.toFixed(2)}</div>
           </div>
-          <button className="w-full bg-[#ff7400] text-white py-4 rounded-lg font-bold text-xl hover:bg-orange-600 transition">Checkout</button>
+          <button className="w-full bg-[#ff7400] text-white py-4 rounded-lg font-bold text-xl hover:bg-orange-600 transition" onClick={() => setShowCheckout(true)}>Checkout</button>
+          {showCheckout && (
+            <div className="fixed inset-0 z-50 flex items-center justify-center">
+              <div className="fixed inset-0 bg-black bg-opacity-40 backdrop-blur-sm" onClick={() => setShowCheckout(false)}></div>
+              <div className="relative bg-white rounded-lg shadow-lg max-w-lg w-full p-8 z-10 animate-fadeIn">
+                <button className="absolute top-2 right-2 text-gray-400 hover:text-gray-700 text-2xl" onClick={() => setShowCheckout(false)}>&times;</button>
+                {submitted ? (
+                  <div className="text-center">
+                    <h2 className="text-2xl font-bold mb-4">Thank you for your order!</h2>
+                    <p className="mb-4">A confirmation has been sent to <span className="font-semibold">{checkoutData.email}</span>.</p>
+                    <button className="bg-[#ff7400] text-white px-6 py-3 rounded-lg font-bold hover:bg-orange-600 transition" onClick={() => setShowCheckout(false)}>Close</button>
+                  </div>
+                ) : (
+                  <form onSubmit={handleSubmit} className="space-y-4">
+                    <h2 className="text-2xl font-bold mb-4">Checkout</h2>
+                    <input required type="email" name="email" placeholder="Email" value={checkoutData.email} onChange={handleChange} className="w-full border rounded px-4 py-2" />
+                    <input required type="text" name="name" placeholder="Full Name" value={checkoutData.name} onChange={handleChange} className="w-full border rounded px-4 py-2" />
+                    <input required type="text" name="address" placeholder="Address" value={checkoutData.address} onChange={handleChange} className="w-full border rounded px-4 py-2" />
+                    <div className="flex gap-2">
+                      <input required type="text" name="city" placeholder="City" value={checkoutData.city} onChange={handleChange} className="flex-1 border rounded px-4 py-2" />
+                      <input required type="text" name="state" placeholder="State" value={checkoutData.state} onChange={handleChange} className="flex-1 border rounded px-4 py-2" />
+                    </div>
+                    <div className="flex gap-2">
+                      <input required type="text" name="zip" placeholder="ZIP" value={checkoutData.zip} onChange={handleChange} className="flex-1 border rounded px-4 py-2" />
+                      <input required type="text" name="country" placeholder="Country" value={checkoutData.country} onChange={handleChange} className="flex-1 border rounded px-4 py-2" />
+                    </div>
+                    <input type="tel" name="phone" placeholder="Phone (optional, for delivery updates)" value={checkoutData.phone} onChange={handleChange} className="w-full border rounded px-4 py-2" />
+                    <button type="submit" className="w-full bg-[#ff7400] text-white py-3 rounded-lg font-bold text-xl hover:bg-orange-600 transition">Place Order</button>
+                  </form>
+                )}
+              </div>
+            </div>
+          )}
         </>
       )}
     </div>

@@ -28,6 +28,8 @@ export default function Navbar() {
   const menuRef = useRef<HTMLDivElement>(null);
   const pathname = usePathname();
   const [isHovered, setIsHovered] = useState(false);
+  const prevCount = useRef(items.length);
+  const [animate, setAnimate] = useState(false);
 
   const isWhiteBg = isHovered || (pathname !== '/' || (typeof window !== 'undefined' && window.scrollY > 0));
 
@@ -85,6 +87,15 @@ export default function Navbar() {
       window.removeEventListener('scroll', handleScroll);
     };
   }, [lastScrollY, pathname]);
+
+  useEffect(() => {
+    if (items.length !== prevCount.current) {
+      setAnimate(true);
+      prevCount.current = items.length;
+      const timeout = setTimeout(() => setAnimate(false), 300);
+      return () => clearTimeout(timeout);
+    }
+  }, [items.length]);
 
   return (
     <nav
@@ -213,19 +224,15 @@ export default function Navbar() {
                 )}
               </AnimatePresence>
             </div>
-            <Link 
-              href="/cart" 
-              className={`relative transition-colors duration-200 ${isWhiteBg ? 'text-[#ff7400]' : 'text-white'}`}
-            >
+            <Link href="/cart" className={`text-gray-600 hover:text-purple-600 relative`}>
               <ShoppingBag className="h-5 w-5" />
               {items.length > 0 && (
-                <motion.span
-                  initial={{ scale: 0 }}
-                  animate={{ scale: 1 }}
-                  className="absolute -top-2 -right-2 bg-[#ff7400] text-white text-xs rounded-full h-5 w-5 flex items-center justify-center"
+                <span
+                  className={`absolute -top-2 -right-2 bg-red-600 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center transition-transform duration-300 ${animate ? 'scale-125' : 'scale-100'}`}
+                  style={{ boxShadow: '0 0 0 2px white' }}
                 >
                   {items.length}
-                </motion.span>
+                </span>
               )}
             </Link>
           </div>
