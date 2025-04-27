@@ -1,33 +1,12 @@
-'use client';
-
-import { useShopify } from '../../context/ShopifyContext';
-import CategoryPage from '../../components/CategoryPage';
-import { getCollections } from '../../../lib/shopify';
+import { getProducts, getCollections } from '../../../lib/shopify';
 import Image from 'next/image';
 import Link from 'next/link';
 
-async function getDressesCollection() {
-  const collections = await getCollections();
-  return collections.find((col: any) => col.handle === 'dresses');
-}
-
 export default async function FashionPage() {
-  const { products, isLoading, error } = useShopify();
-  const dressesCollection = await getDressesCollection();
+  const products = await getProducts();
+  const collections = await getCollections();
+  const dressesCollection = collections.find((col: any) => col.handle === 'dresses');
   const dresses = dressesCollection?.products || [];
-  
-  // Filter products for fashion category
-  const fashionProducts = products.filter(product => 
-    product.product_type.toLowerCase() === 'fashion'
-  );
-
-  if (isLoading) {
-    return <div>Loading...</div>;
-  }
-
-  if (error) {
-    return <div>Error: {error}</div>;
-  }
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">

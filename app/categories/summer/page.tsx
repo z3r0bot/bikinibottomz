@@ -1,20 +1,15 @@
-'use client';
-
-import { useShopify } from '../../context/ShopifyContext';
+import { getProducts, getCollections } from '../../../lib/shopify';
 import CategoryPage from '../../components/CategoryPage';
-import { getCollections } from '../../../lib/shopify';
 
 export default async function SummerPage() {
-  const { products, isLoading, error } = useShopify();
-
-  // Fetch the Dresses collection
+  const products = await getProducts();
   const collections = await getCollections();
   const dressesCollection = collections.find((col: any) => col.handle === 'dresses');
   const dressesIds = dressesCollection?.products?.map((p: any) => p.id) || [];
 
   // Filter products for summer category by tag, type, or title, and exclude dresses
-  const summerProducts = products.filter(product => {
-    const hasSummerTag = product.tags && product.tags.map(tag => tag.toLowerCase()).includes('summer');
+  const summerProducts = products.filter((product: any) => {
+    const hasSummerTag = (product.tags && (product.tags as string[]).map((tag: string) => tag.toLowerCase()).includes('summer'));
     const isDress = dressesIds.includes(product.id);
     return (
       !isDress && (
@@ -24,14 +19,6 @@ export default async function SummerPage() {
       )
     );
   });
-
-  if (isLoading) {
-    return <div>Loading...</div>;
-  }
-
-  if (error) {
-    return <div>Error: {error}</div>;
-  }
 
   return (
     <CategoryPage
