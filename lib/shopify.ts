@@ -254,9 +254,31 @@ export async function getProductByHandle(handle: string) {
     if (isBuildTime || !shopifyClient) {
       return null;
     }
-    
     const response = await shopifyClient.request(PRODUCT_BY_HANDLE_QUERY, { handle } as any);
-    return response.data.product;
+    const product = response.data.product;
+    if (!product) return null;
+    return {
+      id: product.id,
+      title: product.title,
+      description: product.description,
+      handle: product.handle,
+      product_type: product.productType,
+      availableForSale: product.availableForSale,
+      images: product.images.edges.map(({ node: img }: any) => ({
+        id: img.id,
+        src: img.url,
+        alt: img.altText
+      })),
+      variants: product.variants.edges.map(({ node: variant }: any) => ({
+        id: variant.id,
+        title: variant.title,
+        price: variant.price,
+        availableForSale: variant.availableForSale,
+        compareAtPrice: variant.compareAtPrice,
+        selectedOptions: variant.selectedOptions
+      })),
+      tags: product.tags || [],
+    };
   } catch (error) {
     console.error(`Error fetching product with handle ${handle}:`, error);
     return null;

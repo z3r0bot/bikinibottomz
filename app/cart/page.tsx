@@ -1,87 +1,44 @@
 'use client';
 
-import { useCartStore, CartItem } from '@/store/cartStore';
-import { ShopifyProduct } from '../context/ShopifyContext';
+import { useCart } from '../context/CartContext';
 import Image from 'next/image';
 import Link from 'next/link';
-import { Trash2 } from 'lucide-react';
 
 export default function CartPage() {
-  const { items, removeItem, updateQuantity, getTotalPrice } = useCartStore();
+  const { cart, updateQuantity, removeFromCart, clearCart } = useCart();
 
-  const handleRemove = (productId: string) => {
-    removeItem(productId);
-  };
-
-  const handleQuantityChange = (productId: string, newQuantity: number) => {
-    if (newQuantity > 0) {
-      updateQuantity(productId, newQuantity);
-    }
-  };
+  const total = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
 
   return (
-    <div className="container mx-auto px-4 py-8">
+    <div className="max-w-3xl mx-auto px-4 py-12">
       <h1 className="text-3xl font-bold mb-8">Your Cart</h1>
-      {items.length === 0 ? (
-        <div className="text-center">
-          <p className="text-lg mb-4">Your cart is empty</p>
-          <Link href="/shop" className="text-blue-600 hover:text-blue-800">
-            Continue Shopping
-          </Link>
-        </div>
+      {cart.length === 0 ? (
+        <div className="text-center text-gray-500">Your cart is empty.</div>
       ) : (
-        <div className="space-y-4">
-          {items.map((item: CartItem) => (
-            <div key={item.product.id} className="flex items-center border p-4 rounded-lg">
-              <div className="relative w-24 h-24 mr-4">
-                <Image
-                  src={item.product.images[0]?.src || '/placeholder.jpg'}
-                  alt={item.product.title}
-                  fill
-                  className="object-cover rounded"
-                />
-              </div>
-              <div className="flex-grow">
-                <h3 className="text-lg font-semibold">{item.product.title}</h3>
-                <p className="text-gray-600">
-                  ${parseFloat(item.product.variants[0]?.price?.amount || '0').toFixed(2)}
-                </p>
-                <div className="flex items-center mt-2">
-                  <button
-                    onClick={() => handleQuantityChange(item.product.id, item.quantity - 1)}
-                    className="px-2 py-1 border rounded"
-                  >
-                    -
-                  </button>
-                  <span className="mx-2">{item.quantity}</span>
-                  <button
-                    onClick={() => handleQuantityChange(item.product.id, item.quantity + 1)}
-                    className="px-2 py-1 border rounded"
-                  >
-                    +
-                  </button>
+        <>
+          <ul className="divide-y divide-gray-200 mb-8">
+            {cart.map(item => (
+              <li key={item.variantId} className="flex items-center py-4 gap-4">
+                <Image src={item.image} alt={item.title} width={80} height={80} className="rounded-lg" />
+                <div className="flex-1">
+                  <Link href={`/products/${item.handle}`} className="font-semibold text-lg hover:underline">{item.title}</Link>
+                  <div className="text-[#ff7400] font-bold">${item.price.toFixed(2)}</div>
+                  <div className="flex items-center gap-2 mt-2">
+                    <button onClick={() => updateQuantity(item.variantId, Math.max(1, item.quantity - 1))} className="px-2 py-1 bg-gray-200 rounded">-</button>
+                    <span>{item.quantity}</span>
+                    <button onClick={() => updateQuantity(item.variantId, item.quantity + 1)} className="px-2 py-1 bg-gray-200 rounded">+</button>
+                  </div>
                 </div>
-              </div>
-              <button
-                onClick={() => handleRemove(item.product.id)}
-                className="text-red-600 hover:text-red-800"
-              >
-                <Trash2 size={20} />
-              </button>
-            </div>
-          ))}
-          <div className="mt-8 text-right">
-            <p className="text-xl font-bold">
-              Total: ${getTotalPrice().toFixed(2)}
-            </p>
-            <Link
-              href="/checkout"
-              className="inline-block mt-4 px-6 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
-            >
-              Proceed to Checkout
-            </Link>
+                <button onClick={() => removeFromCart(item.variantId)} className="text-red-500 font-bold ml-4">Remove</button>
+              </li>
+            ))}
+          </ul>
+          <div className="flex justify-between items-center mb-8">
+            <button onClick={clearCart} className="text-sm text-gray-500 underline">Clear Cart</button>
+            <div className="text-2xl font-bold">Total: ${total.toFixed(2)}</div>
           </div>
-        </div>
+          <button className="w-full bg-[#ff7400] text-white py-4 rounded-lg font-bold text-xl hover:bg-orange-600 transition">Checkout</button>
+        </>
       )}
     </div>
   );

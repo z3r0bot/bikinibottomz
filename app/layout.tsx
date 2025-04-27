@@ -3,6 +3,7 @@ import { Dancing_Script, Raleway } from 'next/font/google'
 import Navbar from './components/Navbar'
 import Footer from './components/Footer'
 import { ShopifyProvider } from './context/ShopifyContext'
+import ClientProviders from './components/ClientProviders'
 
 const dancingScript = Dancing_Script({ 
   subsets: ['latin'],
@@ -27,11 +28,13 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${dancingScript.variable} ${raleway.variable} font-sans bg-white`}>
-        <ShopifyProvider>
-          <Navbar />
-          <main className="min-h-screen">{children}</main>
-          <Footer />
-        </ShopifyProvider>
+        <ClientProviders>
+          <ShopifyProvider>
+            <Navbar />
+            <main className="min-h-screen">{children}</main>
+            <Footer />
+          </ShopifyProvider>
+        </ClientProviders>
       </body>
     </html>
   )
