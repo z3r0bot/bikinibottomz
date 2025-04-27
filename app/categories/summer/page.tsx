@@ -2,17 +2,26 @@
 
 import { useShopify } from '../../context/ShopifyContext';
 import CategoryPage from '../../components/CategoryPage';
+import { getCollections } from '../../../lib/shopify';
 
-export default function SummerPage() {
+export default async function SummerPage() {
   const { products, isLoading, error } = useShopify();
 
-  // Filter products for summer category by tag, type, or title
+  // Fetch the Dresses collection
+  const collections = await getCollections();
+  const dressesCollection = collections.find((col: any) => col.handle === 'dresses');
+  const dressesIds = dressesCollection?.products?.map((p: any) => p.id) || [];
+
+  // Filter products for summer category by tag, type, or title, and exclude dresses
   const summerProducts = products.filter(product => {
     const hasSummerTag = product.tags && product.tags.map(tag => tag.toLowerCase()).includes('summer');
+    const isDress = dressesIds.includes(product.id);
     return (
-      (product.product_type && product.product_type.toLowerCase().includes('summer')) ||
-      (product.title && product.title.toLowerCase().includes('summer')) ||
-      hasSummerTag
+      !isDress && (
+        (product.product_type && product.product_type.toLowerCase().includes('summer')) ||
+        (product.title && product.title.toLowerCase().includes('summer')) ||
+        hasSummerTag
+      )
     );
   });
 
