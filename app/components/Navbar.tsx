@@ -5,16 +5,39 @@ import Link from 'next/link';
 import { useCartStore } from '@/store/cartStore';
 import { Menu, ShoppingBag, Search } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { usePathname } from 'next/navigation';
+
+interface Category {
+  name: string;
+  href: string;
+  subcategories?: SubCategory[];
+}
+
+interface SubCategory {
+  name: string;
+  href: string;
+}
 
 export default function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isCurrencyOpen, setIsCurrencyOpen] = useState(false);
   const [currency, setCurrency] = useState('USD $');
+  const [isVisible, setIsVisible] = useState(true);
+  const [lastScrollY, setLastScrollY] = useState(0);
   const { items } = useCartStore();
   const menuRef = useRef<HTMLDivElement>(null);
+  const pathname = usePathname();
 
-  const categories = [
-    { name: 'Fashion', href: '/categories/fashion' },
+  const categories: Category[] = [
+    { 
+      name: 'Fashion', 
+      href: '/categories/fashion',
+      subcategories: [
+        { name: 'Tops', href: '/categories/fashion/tops' },
+        { name: 'Bottoms', href: '/categories/fashion/bottoms' },
+        { name: 'Bikinis', href: '/categories/fashion/bikinis' },
+      ]
+    },
     { name: 'Beauty', href: '/categories/beauty' },
     { name: 'Accessories', href: '/categories/accessories' },
     { name: 'Summer', href: '/categories/summer' },
@@ -35,12 +58,37 @@ export default function Navbar() {
       }
     };
 
+    const handleScroll = () => {
+      const currentScrollY = window.scrollY;
+      
+      // Only apply scroll-based visibility on the home page
+      if (pathname === '/') {
+        if (currentScrollY > lastScrollY) {
+          // Scrolling down
+          setIsVisible(false);
+        } else {
+          // Scrolling up
+          setIsVisible(true);
+        }
+      } else {
+        // Always visible on other pages
+        setIsVisible(true);
+      }
+      
+      setLastScrollY(currentScrollY);
+    };
+
     document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
-  }, []);
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+      window.removeEventListener('scroll', handleScroll);
+    };
+  }, [lastScrollY, pathname]);
 
   return (
-    <nav className="fixed top-0 left-0 right-0 z-50 group">
+    <nav className={`fixed top-0 left-0 right-0 z-50 transition-transform duration-300 ${isVisible ? 'translate-y-0' : '-translate-y-full'}`}>
       {/* Background that only appears on hover */}
       <div className="absolute inset-0 bg-white opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
       
@@ -77,13 +125,38 @@ export default function Navbar() {
                       animate={{ opacity: 1, x: 0 }}
                       transition={{ delay: index * 0.1 }}
                     >
-                      <Link
-                        href={category.href}
-                        className="block px-4 py-2 text-gray-700 hover:bg-gradient-to-r hover:from-[#ff7400] hover:to-[#ffa242] hover:text-white transition-all duration-200"
-                        onClick={() => setIsMenuOpen(false)}
-                      >
-                        {category.name}
-                      </Link>
+                      {category.subcategories ? (
+                        <div className="relative group/sub">
+                          <Link
+                            href={category.href}
+                            className="block px-4 py-2 text-gray-700 hover:bg-gradient-to-r hover:from-[#ff7400] hover:to-[#ffa242] hover:text-white transition-all duration-200"
+                          >
+                            {category.name}
+                          </Link>
+                          <div className="absolute left-full top-0 hidden group-hover/sub:block">
+                            <div className="bg-white rounded-md shadow-lg overflow-hidden">
+                              {category.subcategories.map((sub) => (
+                                <Link
+                                  key={sub.name}
+                                  href={sub.href}
+                                  className="block px-4 py-2 text-gray-700 hover:bg-gradient-to-r hover:from-[#ff7400] hover:to-[#ffa242] hover:text-white transition-all duration-200 whitespace-nowrap"
+                                  onClick={() => setIsMenuOpen(false)}
+                                >
+                                  {sub.name}
+                                </Link>
+                              ))}
+                            </div>
+                          </div>
+                        </div>
+                      ) : (
+                        <Link
+                          href={category.href}
+                          className="block px-4 py-2 text-gray-700 hover:bg-gradient-to-r hover:from-[#ff7400] hover:to-[#ffa242] hover:text-white transition-all duration-200"
+                          onClick={() => setIsMenuOpen(false)}
+                        >
+                          {category.name}
+                        </Link>
+                      )}
                     </motion.div>
                   ))}
                 </motion.div>
@@ -105,7 +178,7 @@ export default function Navbar() {
           </div>
 
           {/* Right section - Search, Currency, Cart */}
-          <div className="flex items-center space-x-4">
+          <div className="flex items-center space-x-6">
             <button className="text-white group-hover:text-gray-800 hover:text-[#ff7400] transition-colors duration-200">
               <Search className="h-5 w-5" />
             </button>

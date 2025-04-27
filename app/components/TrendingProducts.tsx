@@ -44,10 +44,10 @@ const trendingProducts = [
 
 export default function TrendingProducts() {
   return (
-    <section id="trending" className="py-16 bg-white">
+    <div className="py-16 bg-white">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <h2 className="text-3xl font-dancing font-bold text-center mb-12">Trending Products</h2>
-        <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-8">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10">
           {trendingProducts.map((product) => (
             <div key={product.id} className="group">
               <div className="relative aspect-square overflow-hidden rounded-lg">
@@ -66,6 +66,6 @@ export default function TrendingProducts() {
           ))}
         </div>
       </div>
-    </section>
+    </div>
   );
 } 

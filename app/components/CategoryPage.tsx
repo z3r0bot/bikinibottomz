@@ -18,25 +18,26 @@ export default function CategoryPage({ title, description, products }: CategoryP
         <p className="text-lg text-gray-600 max-w-2xl mx-auto">{description}</p>
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10">
         {products.map((product) => (
           <Link
             key={product.id}
             href={`/products/${product.handle}`}
             className="group"
           >
-            <div className="aspect-w-1 aspect-h-1 w-full overflow-hidden rounded-lg bg-gray-200">
+            <div className="aspect-square overflow-hidden rounded-lg bg-gray-200">
               <Image
                 src={product.images[0]?.src || '/images/placeholder.jpg'}
                 alt={product.images[0]?.alt || product.title}
-                width={500}
-                height={500}
-                className="h-full w-full object-cover object-center group-hover:opacity-75"
+                width={800}
+                height={800}
+                className="h-full w-full object-cover object-center group-hover:scale-105 transition-transform duration-300"
+                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw"
               />
             </div>
-            <div className="mt-4">
-              <h3 className="text-sm font-medium text-gray-900">{product.title}</h3>
-              <p className="mt-1 text-sm font-medium text-gray-900">
+            <div className="mt-4 text-center">
+              <h3 className="text-lg font-medium text-gray-900">{product.title}</h3>
+              <p className="mt-1 text-lg font-medium text-[#ff7400]">
                 ${parseFloat(product.variants[0]?.price?.amount || '0').toFixed(2)}
               </p>
             </div>
