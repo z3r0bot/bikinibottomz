@@ -27,6 +27,9 @@ export default function Navbar() {
   const { items } = useCartStore();
   const menuRef = useRef<HTMLDivElement>(null);
   const pathname = usePathname();
+  const [isHovered, setIsHovered] = useState(false);
+
+  const isWhiteBg = isHovered || (pathname !== '/' || (typeof window !== 'undefined' && window.scrollY > 0));
 
   const categories: Category[] = [
     { 
@@ -84,22 +87,23 @@ export default function Navbar() {
   }, [lastScrollY, pathname]);
 
   return (
-    <nav className={`fixed top-0 left-0 right-0 z-50 transition-transform duration-300 ${isVisible ? 'translate-y-0' : '-translate-y-full'}`}>
-      {/* Background that only appears on hover */}
-      <div className="absolute inset-0 bg-white opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-      
+    <nav
+      className={`fixed top-0 left-0 right-0 z-50 transition-transform duration-300 ${isVisible ? 'translate-y-0' : '-translate-y-full'} ${isWhiteBg ? 'bg-white shadow' : 'bg-transparent'}`}
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
+    >
       <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between h-16 items-center">
           {/* Left section - Menu button and Logo */}
           <div className="flex items-center relative" ref={menuRef}>
             <button
               onClick={() => setIsMenuOpen(!isMenuOpen)}
-              className="text-white group-hover:text-[#ff7400] transition-colors duration-200"
+              className={`${isWhiteBg ? 'text-[#ff7400]' : 'text-white'} transition-colors duration-200`}
             >
               <Menu className="h-6 w-6" />
             </button>
             <Link href="/" className="ml-4">
-              <span className="font-dancing text-2xl text-white group-hover:text-[#ff7400] transition-colors duration-200">
+              <span className={`font-dancing text-2xl ${isWhiteBg ? 'text-[#ff7400]' : 'text-white'} transition-colors duration-200`}>
                 Bikini Bottoms
               </span>
             </Link>
@@ -160,13 +164,13 @@ export default function Navbar() {
             </AnimatePresence>
           </div>
 
-          {/* Center section - Desktop category links - Only visible on hover */}
-          <div className="hidden md:flex items-center space-x-8 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+          {/* Center section - Always show categories */}
+          <div className="hidden md:flex items-center space-x-8">
             {categories.map((category) => (
               <Link
                 key={category.name}
                 href={category.href}
-                className="text-gray-800 hover:text-[#ff7400] transition-colors duration-200 font-poppins"
+                className={`font-poppins transition-colors duration-200 ${isWhiteBg ? 'text-[#ff7400] hover:text-[#ffa242]' : 'text-white hover:text-[#ff7400]'}`}
               >
                 {category.name}
               </Link>
@@ -175,13 +179,13 @@ export default function Navbar() {
 
           {/* Right section - Search, Currency, Cart */}
           <div className="flex items-center space-x-6">
-            <button className="text-white group-hover:text-gray-800 hover:text-[#ff7400] transition-colors duration-200">
+            <button className={`${isWhiteBg ? 'text-[#ff7400]' : 'text-white'} transition-colors duration-200`}>
               <Search className="h-5 w-5" />
             </button>
             <div className="relative">
               <button
                 onClick={() => setIsCurrencyOpen(!isCurrencyOpen)}
-                className="text-white group-hover:text-gray-800 hover:text-[#ff7400] transition-colors duration-200 font-poppins"
+                className={`font-poppins transition-colors duration-200 ${isWhiteBg ? 'text-[#ff7400]' : 'text-white'}`}
               >
                 {currency}
               </button>
@@ -211,7 +215,7 @@ export default function Navbar() {
             </div>
             <Link 
               href="/cart" 
-              className="text-white group-hover:text-gray-800 hover:text-[#ff7400] transition-colors duration-200 relative"
+              className={`relative transition-colors duration-200 ${isWhiteBg ? 'text-[#ff7400]' : 'text-white'}`}
             >
               <ShoppingBag className="h-5 w-5" />
               {items.length > 0 && (
