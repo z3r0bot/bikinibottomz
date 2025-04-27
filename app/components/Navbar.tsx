@@ -60,21 +60,17 @@ export default function Navbar() {
 
     const handleScroll = () => {
       const currentScrollY = window.scrollY;
-      
-      // Only apply scroll-based visibility on the home page
       if (pathname === '/') {
-        if (currentScrollY > lastScrollY) {
-          // Scrolling down
-          setIsVisible(false);
+        if (currentScrollY === 0) {
+          setIsVisible(true); // Always show at the very top
+        } else if (currentScrollY > lastScrollY) {
+          setIsVisible(false); // Hide when scrolling down
         } else {
-          // Scrolling up
-          setIsVisible(true);
+          setIsVisible(true); // Show when scrolling up
         }
       } else {
-        // Always visible on other pages
-        setIsVisible(true);
+        setIsVisible(true); // Always visible on other pages
       }
-      
       setLastScrollY(currentScrollY);
     };
 
