@@ -36,7 +36,7 @@ export default function FashionClientPage({ dresses, twoPieces }: { dresses: any
       {/* Arrows */}
       {currentCategory > 0 && (
         <button
-          className="absolute left-4 top-1/2 -translate-y-1/2 bg-white shadow-lg rounded-full h-14 w-14 flex items-center justify-center text-3xl text-[#ff7400] z-20 hover:bg-[#ff7400] hover:text-white transition"
+          className="fixed left-6 top-1/2 -translate-y-1/2 bg-white shadow-lg rounded-full h-14 w-14 flex items-center justify-center text-3xl text-[#ff7400] z-50 hover:bg-[#ff7400] hover:text-white transition"
           onClick={handlePrev}
           aria-label="Previous category"
         >
@@ -45,7 +45,7 @@ export default function FashionClientPage({ dresses, twoPieces }: { dresses: any
       )}
       {currentCategory < categories.length - 1 && (
         <button
-          className="absolute right-4 top-1/2 -translate-y-1/2 bg-white shadow-lg rounded-full h-14 w-14 flex items-center justify-center text-3xl text-[#ff7400] z-20 hover:bg-[#ff7400] hover:text-white transition"
+          className="fixed right-6 top-1/2 -translate-y-1/2 bg-white shadow-lg rounded-full h-14 w-14 flex items-center justify-center text-3xl text-[#ff7400] z-50 hover:bg-[#ff7400] hover:text-white transition"
           onClick={handleNext}
           aria-label="Next category"
         >

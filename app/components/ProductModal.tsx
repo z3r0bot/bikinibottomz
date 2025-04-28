@@ -13,17 +13,18 @@ export default function ProductModal({ product, open, onClose }: { product: any,
   const colors = Array.from(new Set(product.variants.flatMap((v: any) => v.selectedOptions.filter((o: any) => o.name.toLowerCase() === 'color').map((o: any) => o.value))));
   const sizes = Array.from(new Set(product.variants.flatMap((v: any) => v.selectedOptions.filter((o: any) => o.name.toLowerCase() === 'size').map((o: any) => o.value))));
 
-  // Helper to get the first real product image
-  function getMainImage(images: any[]) {
-    return images.find((img: any) => {
+  // Helper to get all real product images (not size charts/tables)
+  function getRealImages(images: any[]) {
+    return images.filter((img: any) => {
       const alt = (img.alt || '').toLowerCase();
       const src = (img.src || '').toLowerCase();
       return !alt.includes('size') && !alt.includes('chart') && !alt.includes('table') && !src.includes('size') && !src.includes('chart') && !src.includes('table');
-    }) || images[0];
+    });
   }
+  const realImages = getRealImages(product.images);
+  const mainImage = realImages[0] || product.images[0];
 
   // Determine main image index
-  const mainImage = getMainImage(product.images);
   const mainImageIndex = product.images.findIndex((img: any) => img.id === mainImage?.id);
 
   const handleSelect = (color: string, size: string) => {
@@ -57,14 +58,14 @@ export default function ProductModal({ product, open, onClose }: { product: any,
         <div className="flex flex-col md:flex-row gap-6">
           <div className="flex-1">
             <div className="grid grid-cols-2 gap-2 mb-4">
-              {product.images.slice(0, 4).map((img: any, idx: number) => (
+              {realImages.slice(0, 4).map((img: any, idx: number) => (
                 <Image
                   key={String(img.id) || idx}
                   src={img.src}
                   alt={img.alt || product.title}
                   width={200}
                   height={200}
-                  className={`rounded-lg object-cover w-full h-full${idx === mainImageIndex ? ' border-4 border-[#ff7400]' : ''}`}
+                  className={`rounded-lg object-cover w-full h-full${idx === 0 ? ' border-4 border-[#ff7400]' : ''}`}
                 />
               ))}
             </div>
