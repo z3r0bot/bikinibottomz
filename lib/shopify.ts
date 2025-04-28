@@ -206,7 +206,9 @@ export async function getProducts() {
         })),
         tags: product.tags || [],
       };
-    });
+    })
+    // Only include products that are availableForSale
+    .filter((product: any) => product.availableForSale);
 
     console.log(`Successfully fetched ${products.length} products`);
     return products;
