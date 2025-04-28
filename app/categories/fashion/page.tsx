@@ -9,5 +9,9 @@ export default async function FashionPage() {
     const t = normalizeType(product.product_type);
     return t.includes('2piece');
   });
-  return <FashionClientPage dresses={dresses} twoPieces={twoPieces} />;
+  const tops = products.filter((product: any) => {
+    const t = normalizeType(product.product_type);
+    return t.includes('top');
+  });
+  return <FashionClientPage dresses={dresses} twoPieces={twoPieces} tops={tops} />;
 } 

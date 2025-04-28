@@ -9,13 +9,14 @@ const FASHION_CATEGORIES = [
   { key: 'twoPieces', label: '2 Pieces' },
 ];
 
-export default function FashionClientPage({ dresses, twoPieces }: { dresses: any[], twoPieces?: any[] }) {
+export default function FashionClientPage({ dresses, twoPieces, tops }: { dresses: any[], twoPieces?: any[], tops?: any[] }) {
   const [modalProduct, setModalProduct] = useState<any | null>(null);
-  const [currentCategory, setCurrentCategory] = useState(0); // 0: Dresses, 1: 2 Pieces
+  const [currentCategory, setCurrentCategory] = useState(0); // 0: Dresses, 1: 2 Pieces, 2: Tops
 
   const categories = [
     { products: dresses, label: 'Dresses' },
     { products: twoPieces || [], label: '2 Pieces' },
+    { products: tops || [], label: 'Tops' },
   ];
   const { products, label } = categories[currentCategory];
 
