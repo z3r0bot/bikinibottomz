@@ -13,6 +13,19 @@ export default function ProductModal({ product, open, onClose }: { product: any,
   const colors = Array.from(new Set(product.variants.flatMap((v: any) => v.selectedOptions.filter((o: any) => o.name.toLowerCase() === 'color').map((o: any) => o.value))));
   const sizes = Array.from(new Set(product.variants.flatMap((v: any) => v.selectedOptions.filter((o: any) => o.name.toLowerCase() === 'size').map((o: any) => o.value))));
 
+  // Helper to get the first real product image
+  function getMainImage(images: any[]) {
+    return images.find((img: any) => {
+      const alt = (img.alt || '').toLowerCase();
+      const src = (img.src || '').toLowerCase();
+      return !alt.includes('size') && !alt.includes('chart') && !alt.includes('table') && !src.includes('size') && !src.includes('chart') && !src.includes('table');
+    }) || images[0];
+  }
+
+  // Determine main image index
+  const mainImage = getMainImage(product.images);
+  const mainImageIndex = product.images.findIndex((img: any) => img.id === mainImage?.id);
+
   const handleSelect = (color: string, size: string) => {
     const variant = product.variants.find((v: any) =>
       v.selectedOptions.some((o: any) => o.name.toLowerCase() === 'color' && o.value === color) &&
@@ -51,13 +64,13 @@ export default function ProductModal({ product, open, onClose }: { product: any,
                   alt={img.alt || product.title}
                   width={200}
                   height={200}
-                  className="rounded-lg object-cover w-full h-full"
+                  className={`rounded-lg object-cover w-full h-full${idx === mainImageIndex ? ' border-4 border-[#ff7400]' : ''}`}
                 />
               ))}
             </div>
           </div>
           <div className="flex-1 flex flex-col justify-center">
-            <h2 className="text-2xl font-bold mb-2">{product.title}</h2>
+            <h2 className="text-2xl font-poppins font-bold mb-2">{product.title}</h2>
             <p className="text-gray-700 mb-2">{product.description}</p>
             <p className="text-xl font-semibold text-[#ff7400] mb-4">
               ${parseFloat(selectedVariant?.price?.amount || '0').toFixed(2)}
