@@ -7,16 +7,59 @@ import { ArrowLeft, ArrowRight } from 'lucide-react';
 export default function AccessoriesClientPage({ bags, glasses, jewelry }: { bags: any[], glasses?: any[], jewelry?: any[] }) {
   const [modalProduct, setModalProduct] = useState<any | null>(null);
   const [currentCategory, setCurrentCategory] = useState(0); // 0: Bags, 1: Glasses, 2: Jewelry
+  const [currentBagSubcategory, setCurrentBagSubcategory] = useState(0); // 0: All Bags, 1: Totes, 2: Backpacks, 3: Clutches
+
+  // Filter bags into subcategories
+  const allBags = bags;
+  const totes = bags.filter(bag => 
+    bag.title.toLowerCase().includes('tote') || 
+    bag.title.toLowerCase().includes('shopping') ||
+    bag.title.toLowerCase().includes('beach')
+  );
+  const backpacks = bags.filter(bag => 
+    bag.title.toLowerCase().includes('backpack') || 
+    bag.title.toLowerCase().includes('rucksack')
+  );
+  const clutches = bags.filter(bag => 
+    bag.title.toLowerCase().includes('clutch') || 
+    bag.title.toLowerCase().includes('wristlet')
+  );
+
+  const bagSubcategories = [
+    { products: allBags, label: 'All Bags' },
+    { products: totes, label: 'Totes' },
+    { products: backpacks, label: 'Backpacks' },
+    { products: clutches, label: 'Clutches' },
+  ];
 
   const categories = [
-    { products: bags, label: 'Bags' },
-    { products: glasses || [], label: 'Glasses' },
-    { products: jewelry || [], label: 'Jewelry' },
+    { products: bags, label: 'Bags', hasSubcategories: true },
+    { products: glasses || [], label: 'Glasses', hasSubcategories: false },
+    { products: jewelry || [], label: 'Jewelry', hasSubcategories: false },
   ];
-  const { products, label } = categories[currentCategory];
+  
+  const { products, label, hasSubcategories } = categories[currentCategory];
+  
+  // Determine which products to display based on current category and subcategory
+  const displayProducts = currentCategory === 0 && hasSubcategories 
+    ? bagSubcategories[currentBagSubcategory].products 
+    : products;
 
-  const handlePrev = () => setCurrentCategory((prev) => Math.max(0, prev - 1));
-  const handleNext = () => setCurrentCategory((prev) => Math.min(categories.length - 1, prev + 1));
+  const handlePrev = () => {
+    if (currentCategory === 0 && hasSubcategories) {
+      setCurrentBagSubcategory((prev) => Math.max(0, prev - 1));
+    } else {
+      setCurrentCategory((prev) => Math.max(0, prev - 1));
+    }
+  };
+  
+  const handleNext = () => {
+    if (currentCategory === 0 && hasSubcategories) {
+      setCurrentBagSubcategory((prev) => Math.min(bagSubcategories.length - 1, prev + 1));
+    } else {
+      setCurrentCategory((prev) => Math.min(categories.length - 1, prev + 1));
+    }
+  };
 
   // Helper to get the first real product image
   function getMainImage(images: any[]) {
@@ -27,10 +70,19 @@ export default function AccessoriesClientPage({ bags, glasses, jewelry }: { bags
     }) || images[0];
   }
 
+  // Determine if we should show prev/next arrows for subcategories
+  const showPrevArrow = currentCategory === 0 && hasSubcategories 
+    ? currentBagSubcategory > 0 
+    : currentCategory > 0;
+    
+  const showNextArrow = currentCategory === 0 && hasSubcategories 
+    ? currentBagSubcategory < bagSubcategories.length - 1 
+    : currentCategory < categories.length - 1;
+
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 mt-20 relative">
       {/* Arrows */}
-      {currentCategory > 0 && (
+      {showPrevArrow && (
         <button
           className="fixed left-6 top-1/2 -translate-y-1/2 bg-white shadow-lg rounded-full h-14 w-14 flex items-center justify-center text-3xl text-[#ff7400] z-50 hover:bg-[#ff7400] hover:text-white transition"
           onClick={handlePrev}
@@ -39,7 +91,7 @@ export default function AccessoriesClientPage({ bags, glasses, jewelry }: { bags
           <ArrowLeft size={32} />
         </button>
       )}
-      {currentCategory < categories.length - 1 && (
+      {showNextArrow && (
         <button
           className="fixed right-6 top-1/2 -translate-y-1/2 bg-white shadow-lg rounded-full h-14 w-14 flex items-center justify-center text-3xl text-[#ff7400] z-50 hover:bg-[#ff7400] hover:text-white transition"
           onClick={handleNext}
@@ -61,14 +113,42 @@ export default function AccessoriesClientPage({ bags, glasses, jewelry }: { bags
             />
           ))}
         </div>
+        
+        {/* Subcategory bubbles for bags */}
+        {currentCategory === 0 && hasSubcategories && (
+          <div className="flex justify-center gap-4 mt-4 mb-2">
+            {bagSubcategories.map((subcat, idx) => (
+              <button
+                key={subcat.label}
+                className={`px-3 py-1 rounded-full text-sm ${
+                  currentBagSubcategory === idx 
+                    ? 'bg-[#ff7400] text-white' 
+                    : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+                } transition`}
+                onClick={() => setCurrentBagSubcategory(idx)}
+                aria-label={subcat.label}
+              >
+                {subcat.label}
+              </button>
+            ))}
+          </div>
+        )}
       </div>
       <div className="mb-12">
-        <h2 className="text-2xl font-semibold text-center mb-6">{label}</h2>
-        {products.length === 0 ? (
-          <p className="text-center text-gray-500">No {label.toLowerCase()} available at the moment.</p>
+        <h2 className="text-2xl font-semibold text-center mb-6">
+          {currentCategory === 0 && hasSubcategories 
+            ? bagSubcategories[currentBagSubcategory].label 
+            : label}
+        </h2>
+        {displayProducts.length === 0 ? (
+          <p className="text-center text-gray-500">
+            No {currentCategory === 0 && hasSubcategories 
+              ? bagSubcategories[currentBagSubcategory].label.toLowerCase() 
+              : label.toLowerCase()} available at the moment.
+          </p>
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-            {products.map((product) => {
+            {displayProducts.map((product) => {
               const image = getMainImage(product.images);
               const variant = product.variants[0];
               const price = variant?.price?.amount || '0.00';
