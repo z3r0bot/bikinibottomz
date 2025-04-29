@@ -108,7 +108,10 @@ export default function AccessoriesClientPage({ bags, glasses, jewelry }: { bags
             <button
               key={cat.label}
               className={`h-4 w-4 rounded-full border-2 ${currentCategory === idx ? 'bg-[#ff7400] border-[#ff7400]' : 'bg-gray-300 border-gray-400'} transition`}
-              onClick={() => setCurrentCategory(idx)}
+              onClick={() => {
+                setCurrentCategory(idx);
+                setCurrentBagSubcategory(0);
+              }}
               aria-label={cat.label}
             />
           ))}
