@@ -113,39 +113,17 @@ export default function AccessoriesClientPage({ bags, glasses, jewelry }: { bags
             />
           ))}
         </div>
-        
-        {/* Subcategory bubbles for bags */}
-        {currentCategory === 0 && hasSubcategories && (
-          <div className="flex justify-center gap-4 mt-4 mb-2">
-            {bagSubcategories.map((subcat, idx) => (
-              <button
-                key={subcat.label}
-                className={`px-3 py-1 rounded-full text-sm ${
-                  currentBagSubcategory === idx 
-                    ? 'bg-[#ff7400] text-white' 
-                    : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
-                } transition`}
-                onClick={() => setCurrentBagSubcategory(idx)}
-                aria-label={subcat.label}
-              >
-                {subcat.label}
-              </button>
-            ))}
-          </div>
-        )}
       </div>
       <div className="mb-12">
-        <h2 className="text-2xl font-semibold text-center mb-6">
+        <h2 className="text-3xl font-poppins font-bold text-center mb-8">
           {currentCategory === 0 && hasSubcategories 
             ? bagSubcategories[currentBagSubcategory].label 
             : label}
         </h2>
         {displayProducts.length === 0 ? (
-          <p className="text-center text-gray-500">
-            No {currentCategory === 0 && hasSubcategories 
-              ? bagSubcategories[currentBagSubcategory].label.toLowerCase() 
-              : label.toLowerCase()} available at the moment.
-          </p>
+          <div className="col-span-full text-center text-gray-500">
+            No products found in this category.
+          </div>
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
             {displayProducts.map((product) => {
