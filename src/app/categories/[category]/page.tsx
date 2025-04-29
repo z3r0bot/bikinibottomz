@@ -7,7 +7,6 @@ import Link from 'next/link';
 export async function generateStaticParams() {
   return [
     { category: 'fashion' },
-    { category: 'beauty' },
     { category: 'summer' },
     { category: 'accessories' }
   ];

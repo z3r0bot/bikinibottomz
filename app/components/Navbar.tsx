@@ -43,7 +43,6 @@ export default function Navbar() {
         { name: 'Bikinis', href: '/categories/fashion/bikinis' },
       ]
     },
-    { name: 'Beauty', href: '/categories/beauty' },
     { name: 'Accessories', href: '/categories/accessories' },
     { name: 'Summer', href: '/categories/summer' },
   ];

@@ -19,14 +19,12 @@ export default function Home() {
   const { products, isLoading, error } = useShopify();
   const categories: Category[] = [
     { name: 'Fashion', href: '/categories/fashion' },
-    { name: 'Beauty', href: '/categories/beauty' },
     { name: 'Accessories', href: '/categories/accessories' },
     { name: 'Summer', href: '/categories/summer' },
   ];
 
   const categoryImages: Record<string, string> = {
     Fashion: '/images/categories/tiles/fashion-tile-simple-bell-dress.png',
-    Beauty: '/images/categories/tiles/beauty-tile.png',
     Accessories: '/images/categories/tiles/accessories-tile.png',
     Summer: '/images/categories/tiles/summer-tile.png',
   };

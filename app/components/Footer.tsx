@@ -29,11 +29,6 @@ export default function Footer() {
                 </Link>
               </li>
               <li>
-                <Link href="/categories/beauty" className="text-gray-600 hover:text-[#ff7400]">
-                  Beauty
-                </Link>
-              </li>
-              <li>
                 <Link href="/categories/summer" className="text-gray-600 hover:text-[#ff7400]">
                   Summer
                 </Link>
