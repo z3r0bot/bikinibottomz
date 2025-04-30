@@ -43,7 +43,7 @@ export default function Home() {
         {/* First Hero Image (Left) */}
         <div className="flex-1 relative hero-image-container">
           <Image
-            src={getImagePath('/images/hero/hero1.jpg')}
+            src="/images/hero/hero1.jpg"
             alt="Hero 1"
             fill
             className="object-cover"
@@ -58,7 +58,7 @@ export default function Home() {
         {/* Second Hero Image (Middle) */}
         <div className="flex-1 relative hero-image-container">
           <Image
-            src={getImagePath('/images/hero/hero2.jpg')}
+            src="/images/hero/hero2.jpg"
             alt="Hero 2"
             fill
             className="object-cover"
@@ -73,7 +73,7 @@ export default function Home() {
         {/* Third Hero Image */}
         <div className="flex-1 relative hero-image-container">
           <Image
-            src={getImagePath('/images/hero/hero3.jpg')}
+            src="/images/hero/hero3.jpg"
             alt="Hero 3"
             fill
             className="object-cover"
