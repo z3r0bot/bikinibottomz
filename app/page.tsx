@@ -3,8 +3,6 @@
 import { motion } from 'framer-motion';
 import Link from 'next/link';
 import Image from 'next/image';
-import TrendingProducts from './components/TrendingProducts';
-import { getImagePath } from '../lib/utils';
 import { useEffect } from 'react';
 import { useShopify } from './context/ShopifyContext';
 import { Suspense } from 'react';
@@ -109,9 +107,9 @@ export default function Home() {
 
       {/* Categories Section */}
       <section id="categories" className="py-16 bg-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
           <h2 className="text-3xl font-dancing font-bold text-center mb-12">Shop by Category</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {categories.map((category) => (
               <Link
                 key={category.name}
@@ -123,24 +121,15 @@ export default function Home() {
                     src={categoryImages[category.name]}
                     alt={`${category.name} category`}
                     fill
-                    className="object-cover transition-transform duration-300 group-hover:scale-105"
-                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw"
+                    className="object-contain transition-transform duration-300 group-hover:scale-105"
+                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 33vw, 25vw"
                   />
-                  <div className="absolute inset-0 bg-black/20 group-hover:bg-black/10 transition-colors duration-300" />
-                  <div className="absolute inset-0 flex items-center justify-center">
-                    <h3 className="text-xl font-raleway font-medium text-white text-center drop-shadow-lg">
-                      {category.name}
-                    </h3>
-                  </div>
                 </div>
               </Link>
             ))}
           </div>
         </div>
       </section>
-
-      {/* Trending Products Section */}
-      <TrendingProducts />
     </div>
   );
 } 
