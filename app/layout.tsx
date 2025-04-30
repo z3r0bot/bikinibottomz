@@ -18,6 +18,10 @@ const raleway = Raleway({
 export const metadata = {
   title: 'Bikini Bottoms',
   description: 'Your premier destination for beachwear and accessories',
+  metadataBase: new URL('https://bikinibottoms.shop'),
+  alternates: {
+    canonical: '/',
+  },
 }
 
 export default function RootLayout({

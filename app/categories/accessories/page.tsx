@@ -6,29 +6,35 @@ import AccessoriesClientPage from '../../components/AccessoriesClientPage';
 export default function AccessoriesPage() {
   const { products, isLoading, error } = useShopify();
   
-  // Filter products for accessories subcategories
+  // Filter products for accessories subcategories based on product type, collections, and tags
   const bags = products.filter(product => 
     product.product_type.toLowerCase() === 'bags' || 
-    product.product_type.toLowerCase() === 'accessories' && 
-    (product.title.toLowerCase().includes('bag') || 
-     product.title.toLowerCase().includes('tote') || 
-     product.title.toLowerCase().includes('backpack'))
+    (product.tags || []).some(tag => tag.toLowerCase() === 'bags') ||
+    product.title.toLowerCase().includes('bag')
   );
   
   const glasses = products.filter(product => 
     product.product_type.toLowerCase() === 'glasses' || 
-    product.product_type.toLowerCase() === 'accessories' && 
-    (product.title.toLowerCase().includes('sunglasses') || 
-     product.title.toLowerCase().includes('glasses'))
+    (product.tags || []).some(tag => tag.toLowerCase() === 'glasses') ||
+    product.title.toLowerCase().includes('glasses') ||
+    product.title.toLowerCase().includes('sunglasses')
   );
   
   const jewelry = products.filter(product => 
     product.product_type.toLowerCase() === 'jewelry' || 
-    product.product_type.toLowerCase() === 'accessories' && 
-    (product.title.toLowerCase().includes('necklace') || 
-     product.title.toLowerCase().includes('bracelet') || 
-     product.title.toLowerCase().includes('earrings') || 
-     product.title.toLowerCase().includes('jewelry'))
+    (product.tags || []).some(tag => tag.toLowerCase() === 'jewelry') ||
+    product.title.toLowerCase().includes('jewelry') ||
+    product.title.toLowerCase().includes('necklace') ||
+    product.title.toLowerCase().includes('bracelet') ||
+    product.title.toLowerCase().includes('earring')
+  );
+
+  const hats = products.filter(product => 
+    product.product_type.toLowerCase() === 'hats' || 
+    (product.tags || []).some(tag => tag.toLowerCase() === 'hats') ||
+    product.title.toLowerCase().includes('hat') ||
+    product.title.toLowerCase().includes('cap') ||
+    product.title.toLowerCase().includes('beanie')
   );
 
   if (isLoading) {
@@ -50,6 +56,7 @@ export default function AccessoriesPage() {
       bags={bags}
       glasses={glasses}
       jewelry={jewelry}
+      hats={hats}
     />
   );
 } 
